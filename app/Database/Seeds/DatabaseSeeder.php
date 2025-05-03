@@ -70,20 +70,19 @@ class DatabaseSeeder extends Seeder
             }
         }
         
-        $proposalData = [];
         $proposalMembers = [];
         
-        // Buat 3 proposal grup
         foreach($grouped as $role => $members) {
             if(count($members) === 0) {
-                continue; // Skip jika tidak ada anggota
+                continue;
             }
             
             $leader = $members[0];
             $this->db->table('proposals')->insert([
-                'leader_id' => $leader['id'], // ✅ Perubahan di sini
+                'leader_id' => $leader['id'],
                 'title' => ucfirst($role) . ' Group Proposal',
                 'is_group' => 1,
+                'status' => $role === 'candidate' ? 'pending' : 'approved',
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $proposalId = $this->db->insertID();
@@ -100,11 +99,10 @@ class DatabaseSeeder extends Seeder
             $this->db->table('proposal_members')->insertBatch($proposalMembers);
         }
         
-        // Buat proposal individu
         $individualProposals = [];
         foreach($individuals as $user) {
             $individualProposals[] = [
-                'leader_id' => $user['id'], // ✅ Perubahan di sini
+                'leader_id' => $user['id'],
                 'title' => 'Individual Proposal - ' . $faker->sentence(2),
                 'is_group' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
@@ -134,7 +132,7 @@ class DatabaseSeeder extends Seeder
             $data[] = [
                 'proposal_id' => $proposal['id'],
                 'file_path' => 'uploads/reports/' . $faker->uuid() . '.pdf',
-                'status' => $faker->randomElement(['pending', 'approved', 'rejected']),
+                'status' => 'approved',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
@@ -215,26 +213,20 @@ class DatabaseSeeder extends Seeder
     {
         $faker = Factory::create();
         
-        // semua graduate
         $graduates = $this->db->table('users')
             ->where('role', 'graduate')
             ->get()->getResultArray();
         
         $data = [];
         
-        foreach ($graduates as $user) {
-            /**
-             * 1️⃣  Cari proposal di mana dia KETUA.
-             * 2️⃣  Jika tidak ada, cari proposal apa pun di mana dia anggota (proposal_members).
-             * 3️⃣  Jika tetap tidak ketemu, skip – supaya tidak melanggar FK.
-             */
+        foreach($graduates as $user) {
             $proposal = $this->db->table('proposals')
                 ->select('id')
                 ->where('leader_id', $user['id'])
                 ->get()
                 ->getFirstRow();
             
-            if (! $proposal) {
+            if(!$proposal) {
                 $proposal = $this->db->table('proposal_members')
                     ->select('proposal_id id')
                     ->where('user_id', $user['id'])
@@ -242,31 +234,29 @@ class DatabaseSeeder extends Seeder
                     ->getFirstRow();
             }
             
-            if (! $proposal) {
-                // graduate ini belum punya proposal yang sah; lewati agar tidak men‑trigger FK error
+            if(!$proposal) {
                 continue;
             }
             
-            // Buat PDF palsu
             $fileName = 'certificate_' . $faker->uuid . '.pdf';
             $relative = 'uploads/certificates/' . $fileName;
             $absolute = WRITEPATH . $relative;
             
-            if (! is_dir(dirname($absolute))) {
+            if(!is_dir(dirname($absolute))) {
                 mkdir(dirname($absolute), 0777, true);
             }
             file_put_contents($absolute, '%PDF‑1.4 Fake PDF');
             
             $data[] = [
-                'proposal_id' => $proposal->id,   // ✅ sekarang diisi
-                'user_id'     => $user['id'],
-                'file_path'   => $relative,
-                'created_at'  => date('Y-m-d H:i:s'),
-                'updated_at'  => date('Y-m-d H:i:s'),
+                'proposal_id' => $proposal->id,
+                'user_id' => $user['id'],
+                'file_path' => $relative,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
             ];
         }
         
-        if (! empty($data)) {
+        if(!empty($data)) {
             $this->db->table('certificates')->insertBatch($data);
         }
     }
