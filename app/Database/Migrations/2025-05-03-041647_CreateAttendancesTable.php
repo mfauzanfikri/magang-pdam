@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class CreateAttendancesTable extends Migration
 {
@@ -16,8 +17,17 @@ class CreateAttendancesTable extends Migration
             'check_in'     => ['type' => 'TIME', 'null' => true],
             'check_out'    => ['type' => 'TIME', 'null' => true],
             'is_verified'  => ['type' => 'TINYINT', 'constraint' => 1, 'default' => 0],
-            'created_at'   => ['type' => 'TIMESTAMP', 'default' => 'CURRENT_TIMESTAMP'],
-            'updated_at'   => ['type' => 'TIMESTAMP', 'default' => 'CURRENT_TIMESTAMP', 'on_update' => 'CURRENT_TIMESTAMP'],
+            'created_at' => [
+                'type'    => 'DATETIME',
+                'null'    => false,
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'updated_at' => [
+                'type'    => 'DATETIME',
+                'null'    => false,
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+                'on_update' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('proposal_id', 'proposals', 'id', 'CASCADE', 'CASCADE');

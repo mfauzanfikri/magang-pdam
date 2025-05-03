@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class CreateProposalsTable extends Migration
 {
@@ -15,8 +16,17 @@ class CreateProposalsTable extends Migration
             'is_group'     => ['type' => 'TINYINT', 'constraint' => 1],
             'status'       => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected']],
             'leader_id'    => ['type' => 'INT', 'unsigned' => true],
-            'created_at'   => ['type' => 'TIMESTAMP', 'default' => 'CURRENT_TIMESTAMP'],
-            'updated_at'   => ['type' => 'TIMESTAMP', 'default' => 'CURRENT_TIMESTAMP', 'on_update' => 'CURRENT_TIMESTAMP'],
+            'created_at' => [
+                'type'    => 'DATETIME',
+                'null'    => false,
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'updated_at' => [
+                'type'    => 'DATETIME',
+                'null'    => false,
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+                'on_update' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('leader_id', 'users', 'id', 'CASCADE', 'CASCADE');
