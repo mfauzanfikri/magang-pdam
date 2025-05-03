@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
             'email'      => ['type' => 'VARCHAR', 'constraint' => 255, 'unique' => true],
             'password'   => ['type' => 'VARCHAR', 'constraint' => 255],
             'role'       => ['type' => 'ENUM', 'constraint' => ['admin', 'supervisor', 'candidate', 'intern', 'graduate']],
-            'status'     => ['type' => 'ENUM', 'constraint' => ['active', 'inactive']],
+            'status'     => ['type' => 'ENUM', 'constraint' => ['active', 'inactive'], 'default' => 'active'],
             'created_at' => [
                 'type'    => 'DATETIME',
                 'null'    => false,
