@@ -12,24 +12,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="base-url" content="<?= base_url() ?>">
   <title>Dashboard - Tabler - Premium and Open Source dashboard template with responsive and high quality UI.</title>
   <!-- BEGIN PAGE LEVEL STYLES -->
-  <link href="/assets/libs/jsvectormap/dist/jsvectormap.css?1744816593" rel="stylesheet" />
+    <?= $this->renderSection('page-styles') ?>
   <!-- END PAGE LEVEL STYLES -->
   <!-- BEGIN GLOBAL MANDATORY STYLES -->
   <link href="/assets/dist/css/tabler.css?1744816593" rel="stylesheet" />
   <!-- END GLOBAL MANDATORY STYLES -->
   <!-- BEGIN PLUGINS STYLES -->
-  <link href="/assets/dist/css/tabler-flags.css?1744816593" rel="stylesheet" />
-  <link href="/assets/dist/css/tabler-socials.css?1744816593" rel="stylesheet" />
-  <link href="/assets/dist/css/tabler-payments.css?1744816593" rel="stylesheet" />
-  <link href="/assets/dist/css/tabler-vendors.css?1744816593" rel="stylesheet" />
-  <link href="/assets/dist/css/tabler-marketing.css?1744816593" rel="stylesheet" />
-  <link href="/assets/dist/css/tabler-themes.css?1744816593" rel="stylesheet" />
+    <?= $this->renderSection('page-style-libs') ?>
   <!-- END PLUGINS STYLES -->
-  <!-- BEGIN DEMO STYLES -->
-  <link href="./preview/css/demo.css?1744816593" rel="stylesheet" />
-  <!-- END DEMO STYLES -->
   <!-- BEGIN CUSTOM FONT -->
   <style>
       @import url("https://rsms.me/inter/inter.css");
@@ -56,36 +49,37 @@
               <?php endif; ?>
             <h2 class="page-title"><?= $title ?></h2>
           </div>
+          <!-- Page title actions -->
+          <div class="col-auto ms-auto d-print-none">
+              <?= $this->renderSection('title-actions') ?>
+          </div>
         </div>
       </div>
     </div>
     <!-- END PAGE HEADER -->
+    <!-- BEGIN PAGE BODY -->
     <div class="page-body">
       <div class="container-xl">
-        <!-- BEGIN PAGE BODY -->
-        <div class="page-body">
-          <div class="container-xl">
-              <?= $this->renderSection('content') ?>
-          </div>
-        </div>
-        <!-- END PAGE BODY -->
-        <!--  BEGIN FOOTER  -->
-          <?= $this->include('layouts/footer') ?>
-        <!--  END FOOTER  -->
+          <?= $this->renderSection('content') ?>
       </div>
     </div>
-    
-    <!-- BEGIN PAGE MODALS -->
-      <?= $this->renderSection('modals') ?>
-    <!-- END PAGE MODALS -->
-    <!-- BEGIN PAGE LIBRARIES -->
-      <?= $this->renderSection('page-js-libs') ?>
-    <!-- END PAGE LIBRARIES -->
-    <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-    <script src="/assets/dist/js/tabler.min.js?1744816593" defer></script>
-    <!-- END GLOBAL MANDATORY SCRIPTS -->
-    <!-- BEGIN PAGE SCRIPTS -->
-      <?= $this->renderSection('page-js') ?>
-    <!-- END PAGE SCRIPTS -->
+    <!-- END PAGE BODY -->
+    <!--  BEGIN FOOTER  -->
+      <?= $this->include('layouts/footer') ?>
+    <!--  END FOOTER  -->
+  </div>
+</div>
+<!-- BEGIN PAGE MODALS -->
+<?= $this->renderSection('modals') ?>
+<!-- END PAGE MODALS -->
+<!-- BEGIN PAGE LIBRARIES -->
+<?= $this->renderSection('page-js-libs') ?>
+<!-- END PAGE LIBRARIES -->
+<!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
+<script src="/assets/dist/js/tabler.min.js?1744816593" defer></script>
+<!-- END GLOBAL MANDATORY SCRIPTS -->
+<!-- BEGIN PAGE SCRIPTS -->
+<?= $this->renderSection('page-js') ?>
+<!-- END PAGE SCRIPTS -->
 </body>
 </html>
