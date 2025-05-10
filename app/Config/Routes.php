@@ -5,6 +5,8 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
+$routes->get('/login', 'AuthController::index');
 $routes->get('/dashboard', 'DashboardController::index');
 $routes->group('masters', function(RouteCollection $routes){
     $routes->group('users', function(RouteCollection $routes) {
