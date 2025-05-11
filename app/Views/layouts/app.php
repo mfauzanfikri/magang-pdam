@@ -37,6 +37,9 @@
   <!--  BEGIN SIDEBAR  -->
     <?= $this->include('layouts/sidebar') ?>
   <!--  END SIDEBAR  -->
+  <!-- BEGIN NAVBAR  -->
+    <?= $this->include('layouts/navbar') ?>
+  <!-- END NAVBAR  -->
   <div class="page-wrapper">
     <!-- BEGIN PAGE HEADER -->
     <div class="page-header d-print-none">
