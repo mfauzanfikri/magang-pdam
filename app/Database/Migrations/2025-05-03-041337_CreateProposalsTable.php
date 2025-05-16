@@ -14,8 +14,10 @@ class CreateProposalsTable extends Migration
             'title'        => ['type' => 'VARCHAR', 'constraint' => 255],
             'institution'  => ['type' => 'VARCHAR', 'constraint' => 255],
             'is_group'     => ['type' => 'TINYINT', 'constraint' => 1],
-            'status'       => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected']],
             'leader_id'    => ['type' => 'INT', 'unsigned' => true],
+            'file_path'    => ['type' => 'TEXT', 'null' => true],
+            'status'       => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected']],
+            'note' => ['type' => 'TEXT', 'null' => true],
             'created_at' => [
                 'type'    => 'DATETIME',
                 'null'    => false,
