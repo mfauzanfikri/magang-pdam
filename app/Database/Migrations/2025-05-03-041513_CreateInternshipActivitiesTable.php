@@ -14,9 +14,9 @@ class CreateActivitiesTable extends Migration
             'user_id'   => ['type' => 'INT', 'unsigned' => true],
             'title'       => ['type' => 'VARCHAR', 'constraint' => 255],
             'description' => ['type' => 'TEXT'],
-            'photo_path'  => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
             'start_date'  => ['type' => 'DATE'],
             'end_date'    => ['type' => 'DATE'],
+            'photo_path'  => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
             'created_at' => [
                 'type'    => 'DATETIME',
                 'null'    => false,

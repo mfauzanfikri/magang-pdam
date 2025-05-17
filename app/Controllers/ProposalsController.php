@@ -54,6 +54,9 @@ class ProposalsController extends BaseController
             'notes' => 'string'
         ];
         
+        $notes = trim($this->request->getPost('notes') ?? '');
+        $notes = $notes !== '' ? $notes : null;
+        
         if (!$this->validate($validationRules)) {
             return redirect()->back()
                 ->withInput()
@@ -64,6 +67,7 @@ class ProposalsController extends BaseController
         
         $this->proposalModel->update($id, [
             'status' => $approval,
+            'notes' => $notes
         ]);
         
         return redirect()->back()->with('message', 'Proposal has been ' . $approval . '.');

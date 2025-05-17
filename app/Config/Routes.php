@@ -28,3 +28,8 @@ $routes->group('final-reports', function(RouteCollection $routes) {
     $routes->get('(:num)/file', 'FinalReportsController::getFile/$1');
     $routes->post('(:num)/approval', 'FinalReportsController::approval/$1');
 });
+
+$routes->group('attendance', function(RouteCollection $routes) {
+    $routes->get('', 'AttendanceController::index');
+    $routes->post('(:num)/verification', 'AttendanceController::verification/$1');
+});

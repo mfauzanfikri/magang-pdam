@@ -175,7 +175,7 @@ class DatabaseSeeder extends Seeder
             ->whereIn('leader_id', $graduateUserIds)
             ->get()->getResultArray();
         
-        foreach ($graduateProposals as $proposal) {
+        foreach($graduateProposals as $proposal) {
             $filePath = $destinationDir . Uuid::uuid4()->toString() . '.pdf';
             copy(WRITEPATH . 'uploads/test.pdf', $filePath);
             
@@ -202,7 +202,7 @@ class DatabaseSeeder extends Seeder
         
         // Assign one of each status first
         shuffle($internProposals); // randomize proposals
-        foreach ($statuses as $i => $status) {
+        foreach($statuses as $i => $status) {
             $proposal = $internProposals[$i];
             $filePath = $destinationDir . Uuid::uuid4()->toString() . '.pdf';
             copy(WRITEPATH . 'uploads/test.pdf', $filePath);
@@ -219,7 +219,7 @@ class DatabaseSeeder extends Seeder
         }
         
         // The rest get random statuses
-        for ($i = count($statuses); $i < count($internProposals); $i++) {
+        for($i = count($statuses); $i < count($internProposals); $i++) {
             $proposal = $internProposals[$i];
             $status = $faker->randomElement($statuses);
             $filePath = $destinationDir . Uuid::uuid4()->toString() . '.pdf';
@@ -237,7 +237,7 @@ class DatabaseSeeder extends Seeder
         }
         
         // INSERT
-        if (!empty($data)) {
+        if(!empty($data)) {
             $this->db->table('final_reports')->insertBatch($data);
         }
     }
@@ -268,7 +268,7 @@ class DatabaseSeeder extends Seeder
                     'user_id' => $user['id'],
                     'title' => $faker->sentence(4),
                     'description' => $faker->paragraph(2),
-                    'photo_path' => $filePath,
+                    'photo_path' => str_replace(WRITEPATH, '', $filePath),
                     'start_date' => $start->format('Y-m-d'),
                     'end_date' => $end->format('Y-m-d'),
                     'created_at' => date('Y-m-d H:i:s'),
@@ -284,34 +284,83 @@ class DatabaseSeeder extends Seeder
     
     private function seedAttendances()
     {
-        $faker = Factory::create();
+        $faker = \Faker\Factory::create();
         
+        // Get a verifier admin if available
+        $verifier = $this->db->table('users')->where('role', 'admin')->get()->getRowArray();
+        $verifierId = $verifier['id'] ?? null;
+        
+        // Get proposals (excluding 'pending')
+        $proposals = $this->db->table('proposals')
+            ->whereIn('status', ['approved', 'rejected'])
+            ->get()
+            ->getResultArray();
+        
+        // Get members for group proposals
         $memberships = $this->db->table('proposal_members')->get()->getResultArray();
-        $userProposalMap = [];
-        foreach($memberships as $row) {
-            $userProposalMap[$row['user_id']] = $row['proposal_id'];
+        $proposalMembers = [];
+        foreach ($memberships as $row) {
+            $proposalMembers[$row['proposal_id']][] = $row['user_id'];
         }
         
+        $usedUserIds = [];
         $data = [];
-        foreach($userProposalMap as $userId => $proposalId) {
-            for($i = 0; $i < rand(5, 10); $i++) {
-                $checkIn = $faker->dateTimeBetween('-3 weeks', 'now');
-                $checkOut = (clone $checkIn)->modify('+' . rand(4, 8) . ' hours');
+        
+        foreach ($proposals as $proposal) {
+            $proposalId = $proposal['id'];
+            $isGroup = (bool) $proposal['is_group'];
+            $leaderId = $proposal['leader_id'];
+            
+            $userIds = [];
+            
+            // Group: include both leader and members
+            if ($isGroup) {
+                $userIds[] = $leaderId;
+                if (!empty($proposalMembers[$proposalId])) {
+                    $userIds = array_merge($userIds, $proposalMembers[$proposalId]);
+                }
+            } else {
+                // Individual: only leader
+                $userIds[] = $leaderId;
+            }
+            
+            // Prevent duplicates across proposals
+            foreach (array_unique($userIds) as $userId) {
+                if (in_array($userId, $usedUserIds)) {
+                    continue;
+                }
                 
-                $data[] = [
-                    'proposal_id' => $proposalId,
-                    'user_id' => $userId,
-                    'date' => $checkIn->format('Y-m-d'),
-                    'check_in' => $checkIn->format('H:i:s'),
-                    'check_out' => $checkOut->format('H:i:s'),
-                    'is_verified' => 0,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ];
+                $usedUserIds[] = $userId;
+                
+                for ($i = 0; $i < rand(5, 10); $i++) {
+                    $checkIn = $faker->dateTimeBetween('-3 weeks', 'now');
+                    $checkOut = (clone $checkIn)->modify('+' . rand(4, 8) . ' hours');
+                    
+                    $status = $faker->randomElement(['verified', 'unverified', 'rejected']);
+                    $verifiedBy = ($status === 'verified' && $verifierId) ? $verifierId : null;
+                    
+                    $user = $this->db->table('users')->where('id', $userId)->get()->getRowArray();
+                    
+                    if($user && $user['role'] === 'graduate') {
+                        $status = 'verified';
+                    }
+                    
+                    $data[] = [
+                        'proposal_id' => $proposalId,
+                        'user_id' => $userId,
+                        'date' => $checkIn->format('Y-m-d'),
+                        'check_in' => $checkIn->format('H:i:s'),
+                        'check_out' => $checkOut->format('H:i:s'),
+                        'status' => $status,
+                        'verified_by' => $verifiedBy,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    ];
+                }
             }
         }
         
-        if(!empty($data)) {
+        if (!empty($data)) {
             $this->db->table('attendances')->insertBatch($data);
         }
     }

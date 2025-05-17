@@ -54,6 +54,9 @@ class FinalReportsController extends BaseController
             'notes' => 'string'
         ];
         
+        $notes = trim($this->request->getPost('notes') ?? '');
+        $notes = $notes !== '' ? $notes : null;
+        
         if (!$this->validate($validationRules)) {
             return redirect()->back()
                 ->withInput()
@@ -64,6 +67,7 @@ class FinalReportsController extends BaseController
         
         $this->finalReportModel->update($id, [
             'status' => $approval,
+            'notes' => $notes,
         ]);
         
         return redirect()->back()->with('message', 'FinalReport has been ' . $approval . '.');
