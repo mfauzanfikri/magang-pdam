@@ -40,7 +40,7 @@
           </table>
           
           <div class="mb-3">
-            <label class="form-label" for="approval">Approval</label>
+            <label class="form-label required" for="approval">Approval</label>
             <select id="approval" class="form-select" name="approval" required>
               <option value="" selected disabled hidden>Select approval</option>
               <option value="approved">Approve</option>

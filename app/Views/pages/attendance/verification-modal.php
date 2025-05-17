@@ -42,7 +42,7 @@
           </table>
           
           <div class="mb-3">
-            <label class="form-label" for="verification">Verification*</label>
+            <label class="form-label required" for="verification">Verification</label>
             <select id="verification" class="form-select" name="verification" required>
               <option value="" selected disabled hidden>Select verification</option>
               <option value="verified">Verify</option>

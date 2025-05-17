@@ -28,6 +28,7 @@
       @import url("https://rsms.me/inter/inter.css");
   </style>
   <!-- END CUSTOM FONT -->
+    <?= $this->renderSection('head-js') ?>
 </head>
 <body>
 <!-- BEGIN GLOBAL THEME SCRIPT -->

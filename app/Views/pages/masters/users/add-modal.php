@@ -9,16 +9,16 @@
           <?= csrf_field() ?>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Name</label>
+            <label class="form-label required">Name</label>
             <input type="text" class="form-control" name="name" placeholder="Enter name" autocomplete="off" required />
           </div>
           <div class="mb-3">
-            <label class="form-label">Email</label>
+            <label class="form-label required">Email</label>
             <input type="email" class="form-control" name="email" placeholder="Enter email" autocomplete="off"
                    required />
           </div>
           <div class="mb-3">
-            <label class="form-label" for="role-select">Role</label>
+            <label class="form-label required" for="role-select">Role</label>
             <select id="role-select" class="form-select" name="role" required>
               <option value="" selected disabled hidden>Select role</option>
               <option value="supervisor">Supervisor</option>
