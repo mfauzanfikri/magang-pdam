@@ -9,51 +9,51 @@ helper('row_data') ?>
 <?= $this->endSection() ?>
 
 <?php if(Authz::is('intern')): ?>
-    <?= $this->section('title-actions') ?>
-  <button class="btn btn-primary btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-          data-bs-target="#modal-add-activity">
-    <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="icon icon-2"
-    >
-      <path d="M12 5l0 14" />
-      <path d="M5 12l14 0" />
-    </svg>
-    Create new activity
-  </button>
-  <button
-    class="btn btn-primary btn-6 d-sm-none btn-icon"
-    data-bs-toggle="modal"
-    data-bs-target="#modal-add-activity"
-    aria-label="Create new activity"
+<?= $this->section('title-actions') ?>
+<button class="btn btn-primary btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
+        data-bs-target="#modal-add-activity">
+  <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="icon icon-2"
   >
-    <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="icon icon-2"
-    >
-      <path d="M12 5l0 14" />
-      <path d="M5 12l14 0" />
-    </svg>
-  </button>
-    <?= $this->endSection() ?>
+    <path d="M12 5l0 14" />
+    <path d="M5 12l14 0" />
+  </svg>
+  Create new activity
+</button>
+<button
+  class="btn btn-primary btn-6 d-sm-none btn-icon"
+  data-bs-toggle="modal"
+  data-bs-target="#modal-add-activity"
+  aria-label="Create new activity"
+>
+  <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="icon icon-2"
+  >
+    <path d="M12 5l0 14" />
+    <path d="M5 12l14 0" />
+  </svg>
+</button>
+<?= $this->endSection() ?>
 <?php endif ?>
 
 <?= $this->section('content') ?>
@@ -82,35 +82,35 @@ helper('row_data') ?>
         </thead>
         <tbody>
         <?php foreach($activities as $activity): ?>
-            <?php
-            $id = $activity['id'];
-            ?>
-          <tr>
-            <td><?= $activity['user']['name'] ?></td>
-            <td><?= $activity['title'] ?></td>
-            <td><?= $activity['description'] ?></td>
-            <td><?= $activity['start_date'] ?> - <?= $activity['end_date'] ?></td>
-            <td style="max-width: 200px; min-width: 100px">
-              <img class="img-fluid rounded"
-                   style="max-width: 100%; height: auto;"
-                   src="<?= base_url("/activities/$id/file") ?>"
-                   alt="Activity Image">
-            </td>
-            <td>
-              <div class="d-flex gap-1">
-                <button class="btn-edit btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-                        data-bs-target="#modal-edit-activity"
-                        data-row="<?= encode_row_data($activity) ?>">
-                  Edit
-                </button>
-                <button class="btn-delete btn btn-danger btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-                        data-bs-target="#modal-delete-activity"
-                        data-id="<?= $id ?>">
-                  Delete
-                </button>
-              </div>
-            </td>
-          </tr>
+        <?php
+        $id = $activity['id'];
+        ?>
+        <tr>
+          <td><?= $activity['user']['name'] ?></td>
+          <td><?= $activity['title'] ?></td>
+          <td><?= $activity['description'] ?></td>
+          <td><?= $activity['start_date'] ?> - <?= $activity['end_date'] ?></td>
+          <td style="max-width: 200px; min-width: 100px">
+            <img class="img-fluid rounded"
+                 style="max-width: 100%; height: auto;"
+                 src="<?= base_url("/activities/$id/file") ?>"
+                 alt="Activity Image">
+          </td>
+          <td>
+            <div class="d-flex gap-1">
+              <button class="btn-edit btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
+                      data-bs-target="#modal-edit-activity"
+                      data-row="<?= encode_row_data($activity) ?>">
+                Edit
+              </button>
+              <button class="btn-delete btn btn-danger btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
+                      data-bs-target="#modal-delete-activity"
+                      data-id="<?= $id ?>">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
         <?php endforeach; ?>
         </tbody>
       </table>
@@ -160,8 +160,48 @@ helper('row_data') ?>
   $('#table-loader').removeClass('d-none');
   $('#activities-table-wrapper').addClass('d-none');
 
-  const table = new DataTable('#activities-table', {
+  new DataTable('#activities-table', {
     order: [],
+    dom: `
+        <'row mb-2'
+          <'col-sm-6 d-flex align-items-center gap-2' lB>
+          <'col-sm-6'f>
+        >
+        <'row'
+          <'col-12'tr>
+        >
+        <'row mt-2'
+          <'col-sm-12 col-md-5'i>
+          <'col-sm-12 col-md-7 d-flex justify-content-end'p>
+        >`,
+    buttons: [
+      {
+        extend: 'pdfHtml5',
+        text: 'Export PDF',
+        orientation: 'portrait',
+        pageSize: 'A4',
+        title: 'Kegiatan Magang',
+        exportOptions: {
+          columns: function(idx, data, node) {
+            const header = $(node).text().toLowerCase();
+            return !header.includes('photo') && !header.includes('action');
+          },
+          stripHtml: true
+        },
+        customize: function(doc) {
+          doc.styles.title = {
+            alignment: 'center',
+            fontSize: 16
+          };
+
+          const tableBody = doc.content[1].table.body;
+          const colCount = tableBody[0].length;
+          doc.content[1].table.widths = Array(colCount).fill('*');
+          doc.content[1].margin = [0, 12, 0, 0];
+        },
+        className: 'btn btn-sm btn-outline-danger'
+      }
+    ],
     columnDefs: [
       {
         targets: -1,
@@ -179,5 +219,18 @@ helper('row_data') ?>
       init();
     }
   });
+
+  function getBase64Sync(url) {
+    const canvas = document.createElement('canvas');
+    const img = document.querySelector(`img[src="${url}"]`);
+    if(!img) {
+      return null;
+    }
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    return canvas.toDataURL('image/jpeg');
+  }
 </script>
 <?= $this->endSection() ?>

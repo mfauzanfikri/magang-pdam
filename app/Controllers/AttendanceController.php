@@ -45,7 +45,7 @@ class AttendanceController extends BaseController
             $status = $at['status'];
             $attendanceByStatus[$status][] = $at;
         }
-        // dd($attendanceByStatus);
+       
         $data = [
             'title' => 'Attendance',
             'attendanceByStatus' => $attendanceByStatus,
@@ -77,6 +77,7 @@ class AttendanceController extends BaseController
         
         $this->attendanceModel->update($id, [
             'status' => $verification,
+            'verified_by' => AuthUser::id()
         ]);
         
         return redirect()->back()->with('message', 'Attendance has been ' . $verification . '.');

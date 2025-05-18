@@ -88,6 +88,7 @@ helper('row_data') ?>
               <th>Date</th>
               <th>Check In</th>
               <th>Check Out</th>
+              <th>Verified By</th>
             </tr>
             </thead>
             <tbody>
@@ -97,6 +98,7 @@ helper('row_data') ?>
                 <td><?= $attendance['date'] ?></td>
                 <td><?= $attendance['check_in'] ?></td>
                 <td><?= $attendance['check_out'] ?></td>
+                <td><?= $attendance['verified_by_user']['name'] ?></td>
               </tr>
             <?php endforeach; ?>
             </tbody>
@@ -185,10 +187,50 @@ helper('row_data') ?>
     // verified attendance table
     new DataTable('#verified-attendance-table', {
       order: [],
-      initComplete: function() {
+      dom: `
+        <'row mb-2'
+          <'col-sm-6 d-flex align-items-center gap-2' lB>
+          <'col-sm-6'f>
+        >
+        <'row'
+          <'col-12'tr>
+        >
+        <'row mt-2'
+          <'col-sm-12 col-md-5'i>
+          <'col-sm-12 col-md-7 d-flex justify-content-end'p>
+        >`,
+      buttons: [
+        {
+          extend: 'pdfHtml5',
+          text: 'Export PDF',
+          orientation: 'potrait',
+          pageSize: 'A4',
+          title: 'Absensi Magang',
+          exportOptions: {
+            columns: ':visible'
+          },
+          customize: function (doc) {
+            // Center the title
+            doc.styles.title = {
+              alignment: 'center',
+              fontSize: 16
+            };
+
+            // Set full width for table
+            const tableBody = doc.content[1].table.body;
+            const colCount = tableBody[0].length;
+            doc.content[1].table.widths = Array(colCount).fill('*');
+
+            // Optional: add padding/margin if needed
+            doc.content[1].margin = [0, 12, 0, 0]; // top margin
+          },
+          className: 'btn btn-sm btn-outline-danger'
+        }
+      ],
+      initComplete: function () {
         init();
       },
-      drawCallback: function() {
+      drawCallback: function () {
         init();
       }
     });
