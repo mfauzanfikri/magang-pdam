@@ -2,25 +2,25 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">New final report</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Laporan Akhir Baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <form action="<?= base_url('/final-reports') ?>" method="post" enctype="multipart/form-data">
           <?= csrf_field() ?>
         
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label required" for="add-final-report-title">Title</label>
-            <input id="add-final-report-title" type="text" class="form-control" name="title" placeholder="Enter title" autocomplete="off" required />
+            <label class="form-label required" for="add-final-report-title">Judul</label>
+            <input id="add-final-report-title" type="text" class="form-control" name="title" placeholder="Masukkan judul" autocomplete="off" required />
           </div>
           <div class="mb-3">
-            <label class="form-label required" for="add-final-report-file">File</label>
+            <label class="form-label required" for="add-final-report-file">Unggah File</label>
             <input id="add-final-report-file" type="file" class="form-control" name="file" accept="application/pdf" required />
-            <small>.pdf</small>
+            <small>Format: .pdf</small>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal"> Cancel</button>
+          <button class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal">Batal</button>
           <button type="submit" class="btn btn-primary btn-5 ms-auto">
             <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
             <svg
@@ -38,7 +38,7 @@
               <path d="M12 5l0 14" />
               <path d="M5 12l14 0" />
             </svg>
-            Create new final report
+            Tambah Laporan Akhir
           </button>
         </div>
       </form>

@@ -18,17 +18,17 @@ helper('row_data') ?>
     <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
       <li class="nav-item">
         <a href="#tab-unverified-attendance" class="nav-link active" data-bs-toggle="tab">
-          Unverified
+          Belum Diverifikasi
         </a>
       </li>
       <li class="nav-item">
         <a href="#tab-verified-attendance" class="nav-link" data-bs-toggle="tab">
-          Verified
+          Sudah Diverifikasi
         </a>
       </li>
       <li class="nav-item">
         <a href="#tab-rejected-attendance" class="nav-link" data-bs-toggle="tab">
-          Rejected
+          Ditolak
         </a>
       </li>
     </ul>
@@ -36,22 +36,22 @@ helper('row_data') ?>
   <div class="card-body">
     <div id="table-loader" class="text-center my-4">
       <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">Memuat...</span>
       </div>
     </div>
     <div class="tab-content d-none">
-      <!-- unverified attendance tab -->
+      <!-- Tab: Belum Diverifikasi -->
       <div class="tab-pane active show" id="tab-unverified-attendance">
         <div id="unverified-attendance-table-wrapper">
           <table id="unverified-attendance-table" class="table table-striped">
             <thead>
             <tr>
-              <th>Name</th>
-              <th>Date</th>
-              <th>Check In</th>
-              <th>Check Out</th>
+              <th>Nama</th>
+              <th>Tanggal</th>
+              <th>Masuk</th>
+              <th>Pulang</th>
                 <?php if(Authz::any(['admin', 'supervisor'])): ?>
-                  <th>Actions</th>
+                  <th>Aksi</th>
                 <?php endif ?>
             </tr>
             </thead>
@@ -68,7 +68,7 @@ helper('row_data') ?>
                               data-bs-toggle="modal"
                               data-bs-target="#modal-attendance-verification"
                               data-row="<?= encode_row_data($attendance) ?>">
-                        Verification
+                        Verifikasi
                       </button>
                     </td>
                   <?php endif ?>
@@ -78,17 +78,18 @@ helper('row_data') ?>
           </table>
         </div>
       </div>
-      <!-- verified attendance tab -->
+      
+      <!-- Tab: Sudah Diverifikasi -->
       <div class="tab-pane" id="tab-verified-attendance">
         <div id="verified-attendance-table-wrapper">
           <table id="verified-attendance-table" class="table table-striped">
             <thead>
             <tr>
-              <th>Name</th>
-              <th>Date</th>
-              <th>Check In</th>
-              <th>Check Out</th>
-              <th>Verified By</th>
+              <th>Nama</th>
+              <th>Tanggal</th>
+              <th>Masuk</th>
+              <th>Pulang</th>
+              <th>Diverifikasi Oleh</th>
             </tr>
             </thead>
             <tbody>
@@ -105,16 +106,17 @@ helper('row_data') ?>
           </table>
         </div>
       </div>
-      <!-- rejected attendance tab -->
+      
+      <!-- Tab: Ditolak -->
       <div class="tab-pane" id="tab-rejected-attendance">
         <div id="rejected-attendance-table-wrapper">
           <table id="rejected-attendance-table" class="table table-striped">
             <thead>
             <tr>
-              <th>Name</th>
-              <th>Date</th>
-              <th>Check In</th>
-              <th>Check Out</th>
+              <th>Nama</th>
+              <th>Tanggal</th>
+              <th>Masuk</th>
+              <th>Pulang</th>
             </tr>
             </thead>
             <tbody>
@@ -132,62 +134,63 @@ helper('row_data') ?>
       </div>
     </div>
   </div>
-    
-    <?= $this->endSection() ?>
-    
-    <?= $this->section('modals') ?>
-    
-    <?php if(Authz::any(['admin', 'supervisor'])): ?>
-        <?= $this->include('pages/attendance/verification-modal') ?>
-    <?php endif ?>
-    
-    <?= $this->endSection() ?>
-    
-    <?= $this->section('page-js-libs') ?>
-  <script src="/assets/libs/jquery/jquery.min.js"></script>
-  <script src="/assets/libs/datatables/datatables.js"></script>
-    <?= $this->endSection() ?>
-    
-    <?= $this->section('page-js') ?>
-  <script src="/assets/js/utils/row-data.js"></script>
-  <script>
-    const verificationModal = $('#modal-attendance-verification');
+</div>
 
-    function init() {
-      $('.btn-verification').off('click').on('click', function() {
-        const attendance = decodeRowData($(this).data('row'));
+<?= $this->endSection() ?>
 
-        verificationModal.find('form').attr('action', `/attendance/${attendance.id}/verification`);
+<?= $this->section('modals') ?>
 
-        const detailsTable = $('#modal-attendance-verification table');
+<?php if(Authz::any(['admin', 'supervisor'])): ?>
+    <?= $this->include('pages/attendance/verification-modal') ?>
+<?php endif ?>
 
-        // Set basic text fields
-        detailsTable.find('tr:nth-child(1) td:nth-child(2)').text(attendance.user.name);
-        detailsTable.find('tr:nth-child(2) td:nth-child(2)').text(attendance.user.email);
-        detailsTable.find('tr:nth-child(4) td:nth-child(2)').text(attendance.date);
-        detailsTable.find('tr:nth-child(5) td:nth-child(2)').text(attendance.check_in);
-        detailsTable.find('tr:nth-child(6) td:nth-child(2)').text(attendance.check_out);
-      });
-    }
+<?= $this->endSection() ?>
 
-    $('#table-loader').removeClass('d-none');
-    $('#attendance-tabs .tab-content').addClass('d-none');
+<?= $this->section('page-js-libs') ?>
+<script src="/assets/libs/jquery/jquery.min.js"></script>
+<script src="/assets/libs/datatables/datatables.js"></script>
+<?= $this->endSection() ?>
 
-    // unverified attendance table
-    new DataTable('#unverified-attendance-table', {
-      order: [],
-      initComplete: function() {
-        init();
-      },
-      drawCallback: function() {
-        init();
-      }
+<?= $this->section('page-js') ?>
+<script src="/assets/js/utils/row-data.js"></script>
+<script>
+  const verificationModal = $('#modal-attendance-verification');
+
+  function init() {
+    $('.btn-verification').off('click').on('click', function() {
+      const attendance = decodeRowData($(this).data('row'));
+
+      verificationModal.find('form').attr('action', `/attendance/${attendance.id}/verification`);
+
+      const detailsTable = $('#modal-attendance-verification table');
+
+      // Set basic text fields
+      detailsTable.find('tr:nth-child(1) td:nth-child(2)').text(attendance.user.name);
+      detailsTable.find('tr:nth-child(2) td:nth-child(2)').text(attendance.user.email);
+      detailsTable.find('tr:nth-child(4) td:nth-child(2)').text(attendance.date);
+      detailsTable.find('tr:nth-child(5) td:nth-child(2)').text(attendance.check_in);
+      detailsTable.find('tr:nth-child(6) td:nth-child(2)').text(attendance.check_out);
     });
+  }
 
-    // verified attendance table
-    new DataTable('#verified-attendance-table', {
-      order: [],
-      dom: `
+  $('#table-loader').removeClass('d-none');
+  $('#attendance-tabs .tab-content').addClass('d-none');
+
+  // unverified attendance table
+  new DataTable('#unverified-attendance-table', {
+    order: [],
+    initComplete: function() {
+      init();
+    },
+    drawCallback: function() {
+      init();
+    }
+  });
+
+  // verified attendance table
+  new DataTable('#verified-attendance-table', {
+    order: [],
+    dom: `
         <'row mb-2'
           <'col-sm-6 d-flex align-items-center gap-2' lB>
           <'col-sm-6'f>
@@ -199,54 +202,54 @@ helper('row_data') ?>
           <'col-sm-12 col-md-5'i>
           <'col-sm-12 col-md-7 d-flex justify-content-end'p>
         >`,
-      buttons: [
-        {
-          extend: 'pdfHtml5',
-          text: 'Export PDF',
-          orientation: 'potrait',
-          pageSize: 'A4',
-          title: 'Absensi Magang',
-          exportOptions: {
-            columns: ':visible'
-          },
-          customize: function (doc) {
-            // Center the title
-            doc.styles.title = {
-              alignment: 'center',
-              fontSize: 16
-            };
+    buttons: [
+      {
+        extend: 'pdfHtml5',
+        text: 'Export PDF',
+        orientation: 'potrait',
+        pageSize: 'A4',
+        title: 'Presensi Magang',
+        exportOptions: {
+          columns: ':visible'
+        },
+        customize: function(doc) {
+          // Center the title
+          doc.styles.title = {
+            alignment: 'center',
+            fontSize: 16
+          };
 
-            // Set full width for table
-            const tableBody = doc.content[1].table.body;
-            const colCount = tableBody[0].length;
-            doc.content[1].table.widths = Array(colCount).fill('*');
+          // Set full width for table
+          const tableBody = doc.content[1].table.body;
+          const colCount = tableBody[0].length;
+          doc.content[1].table.widths = Array(colCount).fill('*');
 
-            // Optional: add padding/margin if needed
-            doc.content[1].margin = [0, 12, 0, 0]; // top margin
-          },
-          className: 'btn btn-sm btn-outline-danger'
-        }
-      ],
-      initComplete: function () {
-        init();
-      },
-      drawCallback: function () {
-        init();
+          // Optional: add padding/margin if needed
+          doc.content[1].margin = [0, 12, 0, 0]; // top margin
+        },
+        className: 'btn btn-sm btn-outline-danger'
       }
-    });
+    ],
+    initComplete: function() {
+      init();
+    },
+    drawCallback: function() {
+      init();
+    }
+  });
 
-    // rejected attendance table
-    new DataTable('#rejected-attendance-table', {
-      order: [],
-      initComplete: function() {
-        $('#table-loader').addClass('d-none');
-        $('#attendance-tabs .tab-content').removeClass('d-none');
+  // rejected attendance table
+  new DataTable('#rejected-attendance-table', {
+    order: [],
+    initComplete: function() {
+      $('#table-loader').addClass('d-none');
+      $('#attendance-tabs .tab-content').removeClass('d-none');
 
-        init();
-      },
-      drawCallback: function() {
-        init();
-      }
-    });
-  </script>
-    <?= $this->endSection() ?>
+      init();
+    },
+    drawCallback: function() {
+      init();
+    }
+  });
+</script>
+<?= $this->endSection() ?>

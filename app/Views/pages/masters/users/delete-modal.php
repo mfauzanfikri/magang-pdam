@@ -2,15 +2,15 @@
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-body">
-        <div class="modal-title">Are you sure?</div>
-        <div>If you proceed, the user will be deleted.</div>
+        <div class="modal-title">Apakah Anda yakin?</div>
+        <div>Jika Anda melanjutkan, pengguna ini akan dihapus.</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Batal</button>
         <form action="" method="post">
-          <?= csrf_field() ?>
+            <?= csrf_field() ?>
           <input type="hidden" name="_method" value="DELETE">
-          <button type="submit" class="btn btn-danger">Yes</button>
+          <button type="submit" class="btn btn-danger">Ya, hapus</button>
         </form>
       </div>
     </div>

@@ -2,37 +2,36 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Proposal Detail</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Detail Proposal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <div class="modal-body">
         <table id="proposal-details-table" class="table table-striped">
-          <tbody>
           <thead>
           <tr>
             <th colspan="2"></th>
           </tr>
           </thead>
+          <tbody>
           <tr>
-            <td>Title</td>
+            <td>Judul</td>
             <td></td>
           </tr>
           <tr>
-            <td>Institution</td>
+            <td>Institusi</td>
             <td></td>
           </tr>
           <tr>
-            <td>Leader Name</td>
+            <td>Nama Ketua</td>
             <td></td>
           </tr>
           <tr class="d-none">
-            <td>Members</td>
+            <td>Anggota</td>
             <td></td>
           </tr>
           <tr>
-            <td>Proposal File</td>
-            <td>
-            </td>
+            <td>File Proposal</td>
+            <td></td>
           </tr>
           </tbody>
         </table>

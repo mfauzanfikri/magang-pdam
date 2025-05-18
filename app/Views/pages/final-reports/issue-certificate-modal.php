@@ -2,17 +2,17 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Issue certificate</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Terbitkan Sertifikat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <form action="" method="post" enctype="multipart/form-data">
           <?= csrf_field() ?>
         
         <div class="modal-body">
-        
+          <!-- Konten dinamis sertifikat bisa ditambahkan di sini -->
         </div>
         <div class="modal-footer">
-          <button class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal"> Cancel</button>
+          <button class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal">Batal</button>
           <button type="submit" class="btn btn-primary btn-5 ms-auto">
             <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
             <svg
@@ -30,7 +30,7 @@
               <path d="M12 5l0 14" />
               <path d="M5 12l14 0" />
             </svg>
-            Issue certificate
+            Terbitkan Sertifikat
           </button>
         </div>
       </form>

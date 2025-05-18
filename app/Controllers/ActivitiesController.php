@@ -35,7 +35,7 @@ class ActivitiesController extends BaseController
         $activities = $this->activitiesModel->processJsonFields($raw);
         
         $data = [
-            'title' => 'Activities',
+            'title' => 'Kegiatan',
             'activities' => $activities,
         ];
         
@@ -58,7 +58,7 @@ class ActivitiesController extends BaseController
             }
         }
         
-        throw PageNotFoundException::forPageNotFound("File not found.");
+        throw PageNotFoundException::forPageNotFound("File tidak ditemukan.");
     }
     
     public function store()
@@ -69,11 +69,11 @@ class ActivitiesController extends BaseController
             'start_date' => 'required|valid_date',
             'end_date' => 'required|valid_date',
             'photo_file' => [
-                'label' => 'Photo',
+                'label' => 'Foto',
                 'rules' => 'uploaded[photo_file]'
                     . '|is_image[photo_file]'
                     . '|mime_in[photo_file,image/jpg,image/jpeg,image/png]'
-                    . '|max_size[photo_file,2048]', // 2MB max
+                    . '|max_size[photo_file,2048]', // maksimal 2MB
             ],
         ];
         
@@ -83,7 +83,7 @@ class ActivitiesController extends BaseController
         
         $userId = AuthUser::id();
         
-        // Get user's active proposal
+        // Ambil proposal aktif pengguna
         $proposal = $this->proposalModel
             ->belongsToUser($userId)
             ->active()
@@ -91,7 +91,7 @@ class ActivitiesController extends BaseController
         
         if (!$proposal) {
             return redirect()->back()->withInput()->with('errors', [
-                'proposal' => 'No active proposal found for user.'
+                'proposal' => 'Tidak ada proposal aktif yang ditemukan untuk pengguna.'
             ]);
         }
         
@@ -99,7 +99,7 @@ class ActivitiesController extends BaseController
         $photoPath = '';
         
         if ($file->isValid() && !$file->hasMoved()) {
-            $newName = \Ramsey\Uuid\Uuid::uuid4()->toString();
+            $newName = Uuid::uuid4()->toString();
             $file->move(WRITEPATH . 'uploads/activities', $newName);
             $photoPath = 'uploads/activities/' . $newName;
         }
@@ -111,7 +111,7 @@ class ActivitiesController extends BaseController
         
         $this->activitiesModel->insert($validated);
         
-        return redirect()->to('/activities')->with('message', 'Activity created successfully.');
+        return redirect()->to('/activities')->with('message', 'Kegiatan berhasil dibuat.');
     }
     
     public function update($id)
@@ -125,13 +125,13 @@ class ActivitiesController extends BaseController
         
         $file = $this->request->getFile('photo_file');
         
-        // Only apply file rules if file was uploaded
+        // Terapkan validasi file hanya jika ada file baru diunggah
         if($file && $file->isValid() && !$file->hasMoved()) {
             $rules['photo_file'] = [
-                'label' => 'Photo',
+                'label' => 'Foto',
                 'rules' => 'is_image[photo_file]'
                     . '|mime_in[photo_file,image/jpg,image/jpeg,image/png]'
-                    . '|max_size[photo_file,2048]' // 2MB
+                    . '|max_size[photo_file,2048]' // maksimal 2MB
             ];
         }
         
@@ -141,7 +141,7 @@ class ActivitiesController extends BaseController
         
         $validated = $this->validator->getValidated();
         
-        // Handle optional new image upload
+        // Jika ada foto baru, simpan
         if($file && $file->isValid() && !$file->hasMoved()) {
             $newName = Uuid::uuid4()->toString();
             $file->move(WRITEPATH . 'uploads/activities', $newName);
@@ -150,7 +150,7 @@ class ActivitiesController extends BaseController
         
         $this->activitiesModel->update($id, $validated);
         
-        return redirect()->to('/activities')->with('message', 'Activity updated successfully.');
+        return redirect()->to('/activities')->with('message', 'Kegiatan berhasil diperbarui.');
     }
     
     public function delete($id)
@@ -158,11 +158,11 @@ class ActivitiesController extends BaseController
         $activity = $this->activitiesModel->find($id);
         
         if(!$activity) {
-            return redirect()->back()->withInput()->with('errors', 'Activity not found.');
+            return redirect()->back()->withInput()->with('errors', 'Kegiatan tidak ditemukan.');
         }
         
         $this->activitiesModel->delete($id);
         
-        return redirect()->to('/activities')->with('message', 'Activity deleted successfully.');
+        return redirect()->to('/activities')->with('message', 'Kegiatan berhasil dihapus.');
     }
 }

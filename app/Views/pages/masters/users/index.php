@@ -24,7 +24,7 @@
     <path d="M12 5l0 14" />
     <path d="M5 12l14 0" />
   </svg>
-  Create new user
+  Tambah user
 </button>
 <button
   class="btn btn-primary btn-6 d-sm-none btn-icon"
@@ -60,17 +60,17 @@
   <div class="card-body">
     <div id="table-loader" class="text-center my-4">
       <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">Memuat...</span>
       </div>
     </div>
     <div id="users-table-wrapper" class="d-none">
       <table id="users-table" class="table table-striped">
         <thead>
         <tr>
-          <th>Name</th>
+          <th>Nama</th>
           <th>Email</th>
           <th>Role</th>
-          <th>Actions</th>
+          <th>Aksi</th>
         </tr>
         </thead>
         <tbody>
@@ -84,12 +84,12 @@
               <button class="btn-edit btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                       data-bs-target="#modal-edit-user"
                       data-row="<?= encode_row_data($user) ?>">
-                Edit
+                Ubah
               </button>
               <button class="btn-delete btn btn-danger btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                       data-bs-target="#modal-delete-user"
                       data-id="<?= $user['id'] ?>">
-                Delete
+                Hapus
               </button>
             </td>
           </tr>

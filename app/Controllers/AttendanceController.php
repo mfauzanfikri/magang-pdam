@@ -27,7 +27,7 @@ class AttendanceController extends BaseController
     {
         $query = $this->attendanceModel->withRelations()->orderBy('date', 'desc');
         
-        if(Authz::is('intern')) {
+        if (Authz::is('intern')) {
             $proposal = $this->proposalModel->belongsToUser(AuthUser::id())->active()->first();
             $query->where('user_id', AuthUser::id())->where('proposal_id', $proposal['id']);
         }
@@ -41,13 +41,13 @@ class AttendanceController extends BaseController
             'rejected' => [],
         ];
         
-        foreach($attendance as $at) {
+        foreach ($attendance as $at) {
             $status = $at['status'];
             $attendanceByStatus[$status][] = $at;
         }
-       
+        
         $data = [
-            'title' => 'Attendance',
+            'title' => 'Presensi',
             'attendanceByStatus' => $attendanceByStatus,
         ];
         
@@ -58,7 +58,7 @@ class AttendanceController extends BaseController
     {
         $attendance = $this->attendanceModel->where('id', $id)->first();
         
-        if(!$attendance) {
+        if (!$attendance) {
             throw new PageNotFoundException();
         }
         
@@ -67,7 +67,7 @@ class AttendanceController extends BaseController
             'notes' => 'string'
         ];
         
-        if(!$this->validate($validationRules)) {
+        if (!$this->validate($validationRules)) {
             return redirect()->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
@@ -80,7 +80,7 @@ class AttendanceController extends BaseController
             'verified_by' => AuthUser::id()
         ]);
         
-        return redirect()->back()->with('message', 'Attendance has been ' . $verification . '.');
+        return redirect()->back()->with('message', 'Presensi berhasil di-' . ($verification === 'verified' ? 'verifikasi' : 'tolak') . '.');
     }
     
     public function checkIn()
@@ -105,8 +105,8 @@ class AttendanceController extends BaseController
             ->orderBy('id', 'desc')
             ->first();
         
-        if(!$proposal) {
-            throw new PageNotFoundException('Proposal not found.');
+        if (!$proposal) {
+            throw new PageNotFoundException('Proposal tidak ditemukan.');
         }
         
         $attendanceToday = $this->attendanceModel
@@ -115,7 +115,7 @@ class AttendanceController extends BaseController
             ->where('date', $today)
             ->first();
         
-        if(!$attendanceToday) {
+        if (!$attendanceToday) {
             $this->attendanceModel->insert([
                 'user_id' => $userId,
                 'proposal_id' => $proposal['id'],
@@ -129,7 +129,7 @@ class AttendanceController extends BaseController
                 ->update();
         }
         
-        return redirect()->back()->with('message', 'Check-in was successful.');
+        return redirect()->back()->with('message', 'Check in berhasil dilakukan.');
     }
     
     public function checkOut()
@@ -154,8 +154,8 @@ class AttendanceController extends BaseController
             ->orderBy('id', 'desc')
             ->first();
         
-        if(!$proposal) {
-            throw new PageNotFoundException('Proposal not found.');
+        if (!$proposal) {
+            throw new PageNotFoundException('Proposal tidak ditemukan.');
         }
         
         $attendanceToday = $this->attendanceModel
@@ -164,7 +164,7 @@ class AttendanceController extends BaseController
             ->where('date', $today)
             ->first();
         
-        if(!$attendanceToday) {
+        if (!$attendanceToday) {
             $this->attendanceModel->insert([
                 'user_id' => $userId,
                 'proposal_id' => $proposal['id'],
@@ -178,6 +178,6 @@ class AttendanceController extends BaseController
                 ->update();
         }
         
-        return redirect()->back()->with('message', 'Check-out was successful.');
+        return redirect()->back()->with('message', 'Check out berhasil dilakukan.');
     }
 }

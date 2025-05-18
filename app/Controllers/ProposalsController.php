@@ -27,8 +27,7 @@ class ProposalsController extends BaseController
     
     public function index()
     {
-        $query = $this->proposalModel
-            ->withMembers();
+        $query = $this->proposalModel->withMembers();
         
         if(Authz::any(['candidate', 'intern', 'graduate'])) {
             $query->belongsToUser(AuthUser::id());
@@ -38,7 +37,7 @@ class ProposalsController extends BaseController
         $proposals = $this->proposalModel->processJsonFields($raw);
         
         $data = [
-            'title' => 'Proposals',
+            'title' => 'Proposal',
         ];
         
         if(Authz::any(['admin', 'supervisor'])) {
@@ -58,7 +57,7 @@ class ProposalsController extends BaseController
             $data['proposals'] = $proposals;
             $data['userHasActiveProposal'] = $this->proposalModel->belongsToUser(AuthUser::id())->active()->first() !== null;
         }
-       
+        
         return view('pages/proposals/index', $data);
     }
     
@@ -73,7 +72,7 @@ class ProposalsController extends BaseController
                 'uploaded[file]',
                 'ext_in[file,pdf]',
                 'mime_in[file,application/pdf]',
-                'max_size[file,5120]', // 5MB max
+                'max_size[file,5120]',
             ],
         ];
         
@@ -99,19 +98,16 @@ class ProposalsController extends BaseController
             
             if (!empty($notFound)) {
                 return redirect()->back()->withInput()->with('errors', [
-                    'members' => 'The following emails are not registered: ' . implode(', ', $notFound),
+                    'members' => 'Email berikut belum terdaftar: ' . implode(', ', $notFound),
                 ]);
             }
             
             $memberIds = array_column($existingUsers, 'id');
-            
-            // Include current user in group check
             $allIdsToCheck = array_merge([$userId], $memberIds);
         } else {
             $allIdsToCheck = [$userId];
         }
         
-        // === Check if any of the users already in active proposals
         $activeConflict = $this->proposalModel
             ->select('users.email')
             ->active()
@@ -129,11 +125,10 @@ class ProposalsController extends BaseController
         if (!empty($activeConflict)) {
             $conflictingEmails = array_unique(array_column($activeConflict, 'email'));
             return redirect()->back()->withInput()->with('errors', [
-                'members' => 'These users are already in an active proposal: ' . implode(', ', $conflictingEmails),
+                'members' => 'Pengguna berikut sudah memiliki proposal aktif: ' . implode(', ', $conflictingEmails),
             ]);
         }
         
-        // === Upload the file
         $file = $this->request->getFile('file');
         $filename = \Ramsey\Uuid\Uuid::uuid4()->toString() . '.pdf';
         $file->move(WRITEPATH . 'uploads/proposals', $filename);
@@ -162,7 +157,7 @@ class ProposalsController extends BaseController
             }
         }
         
-        return redirect()->to('/proposals')->with('message', 'Proposal submitted successfully.');
+        return redirect()->to('/proposals')->with('message', 'Proposal berhasil dikirim.');
     }
     
     public function delete($id)
@@ -170,12 +165,12 @@ class ProposalsController extends BaseController
         $user = $this->proposalModel->find($id);
         
         if(!$user) {
-            return redirect()->back()->withInput()->with('errors', 'Proposal not found.');
+            return redirect()->back()->withInput()->with('errors', 'Proposal tidak ditemukan.');
         }
         
         $this->proposalModel->delete($id);
         
-        return redirect()->back()->withInput()->with('message', 'Proposal deleted successfully.');
+        return redirect()->back()->withInput()->with('message', 'Proposal berhasil dihapus.');
     }
     
     public function approval($id)
@@ -205,7 +200,6 @@ class ProposalsController extends BaseController
             'notes'  => $notes,
         ]);
         
-        // If approved, update all related user roles to 'intern'
         if ($approval === 'approved') {
             $userIds = [$proposal['leader_id']];
             
@@ -224,7 +218,7 @@ class ProposalsController extends BaseController
                 ->update();
         }
         
-        return redirect()->back()->with('message', 'Proposal has been ' . $approval . '.');
+        return redirect()->back()->with('message', 'Proposal telah ' . $approval . '.');
     }
     
     public function getFile($id)
@@ -243,7 +237,7 @@ class ProposalsController extends BaseController
             }
         }
         
-        throw PageNotFoundException::forPageNotFound("File not found.");
+        throw PageNotFoundException::forPageNotFound("Berkas tidak ditemukan.");
     }
     
     public function downloadFile($id)
@@ -258,6 +252,6 @@ class ProposalsController extends BaseController
             }
         }
         
-        throw PageNotFoundException::forPageNotFound("File not found.");
+        throw PageNotFoundException::forPageNotFound("Berkas tidak ditemukan.");
     }
 }

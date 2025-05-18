@@ -23,7 +23,7 @@ class AuthController extends BaseController
     
     public function showRegister()
     {
-        if(AuthUser::user()) {
+        if (AuthUser::user()) {
             return redirect()->to('/login');
         }
         
@@ -52,7 +52,7 @@ class AuthController extends BaseController
             'status' => 'active',
         ]);
         
-        return redirect()->to('/login')->with('message', 'Registration successful. Please log in.');
+        return redirect()->to('/login')->with('message', 'Pendaftaran berhasil. Silakan masuk.');
     }
     
     public function attemptLogin()
@@ -62,14 +62,14 @@ class AuthController extends BaseController
             'password' => 'required'
         ];
         
-        if(!$this->validate($rules)) {
+        if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
         
         $user = $this->userModel->where('email', $this->request->getPost('email'))->first();
         
-        if(!$user || !password_verify($this->request->getPost('password'), $user['password'])) {
-            return redirect()->back()->with('errors', 'Invalid credentials.')->withInput();
+        if (!$user || !password_verify($this->request->getPost('password'), $user['password'])) {
+            return redirect()->back()->with('errors', 'Email atau kata sandi salah.')->withInput();
         }
         
         session()->set([
@@ -103,17 +103,17 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
         
-        $userId = AuthUser::id(); // Assuming you're using an AuthUser utility
+        $userId = AuthUser::id();
         $user = $this->userModel->find($userId);
         
         if (!$user || !password_verify($this->request->getPost('password'), $user['password'])) {
-            return redirect()->back()->withInput()->with('errors', ['password' => 'Old password is incorrect.']);
+            return redirect()->back()->withInput()->with('errors', ['password' => 'Password lama tidak sesuai.']);
         }
         
         $newPassword = password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT);
         
         $this->userModel->update($userId, ['password' => $newPassword]);
         
-        return redirect()->back()->with('message', 'Password changed successfully.');
+        return redirect()->back()->with('message', 'Password berhasil diubah.');
     }
 }

@@ -18,20 +18,21 @@ use App\Libraries\Authz;
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col">
-                    <h2 class="fw-bold text-md">Welcome to Magang PDAM</h2>
-                    <div class="text-secondary">A place to start your dream</div>
+                    <h2 class="fw-bold text-md">Selamat Datang di Magang PDAM</h2>
+                    <div class="text-secondary">Tempat untuk memulai mimpimu</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          
           <div class="col-2">
             <div class="card card-sm">
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-auto">
-                    <span class="bg-primary text-white avatar"
-                    ><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                    <span class="bg-primary text-white avatar">
+                      <!-- Download SVG icon from http://tabler.io/icons/icon/file-import -->
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-import">
@@ -43,19 +44,20 @@ use App\Libraries\Authz;
                   </div>
                   <div class="col">
                     <div class="font-weight-medium">Proposal</div>
-                    <div class="text-secondary"><?= $proposal['status'] ?? 'not submitted' ?></div>
+                    <div class="text-secondary"><?= $proposal['status'] ?? 'belum diajukan' ?></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          
           <div class="col-2">
             <div class="card card-sm">
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-auto">
-                    <span class="bg-primary text-white avatar"
-                    ><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                    <span class="bg-primary text-white avatar">
+                      <!-- Download SVG icon from http://tabler.io/icons/icon/file-isr -->
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-isr">
@@ -68,20 +70,21 @@ use App\Libraries\Authz;
                     </span>
                   </div>
                   <div class="col">
-                    <div class="font-weight-medium">Final Report</div>
-                    <div class="text-secondary"><?= $finalReport['status'] ?? 'not submitted' ?></div>
+                    <div class="font-weight-medium">Laporan Akhir</div>
+                    <div class="text-secondary"><?= $finalReport['status'] ?? 'belum diajukan' ?></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          
           <div class="col-2">
             <div class="card card-sm">
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-auto">
-                    <span class="bg-primary text-white avatar"
-                    ><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                    <span class="bg-primary text-white avatar">
+                      <!-- Download SVG icon from http://tabler.io/icons/icon/calendar-event -->
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                            class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event">
@@ -95,19 +98,20 @@ use App\Libraries\Authz;
                     </span>
                   </div>
                   <div class="col">
-                    <div class="font-weight-medium"><?= $activityCount ?> Activities</div>
+                    <div class="font-weight-medium"><?= $activityCount ?> Aktivitas</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          
           <div class="col-2">
             <div class="card card-sm">
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-auto">
-                    <span class="bg-primary text-white avatar"
-                    ><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                    <span class="bg-primary text-white avatar">
+                      <!-- Download SVG icon from http://tabler.io/icons/icon/calendar-plus -->
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                            class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-plus">
@@ -122,17 +126,15 @@ use App\Libraries\Authz;
                     </span>
                   </div>
                   <div class="col">
-                    <div>Attendance</div>
+                    <div>Presensi</div>
                       <?php if(!$attendanceToday || !$attendanceToday['check_in']): ?>
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#modal-check-in">Check In
-                        </button>
+                                data-bs-target="#modal-check-in">Check In</button>
                       <?php elseif($attendanceToday && !$attendanceToday['check_out']): ?>
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#modal-check-out">Check Out
-                        </button>
+                                data-bs-target="#modal-check-out">Check Out</button>
                       <?php else: ?>
-                        <div class="text-secondary">Completed</div>
+                        <div class="text-secondary">Selesai</div>
                       <?php endif; ?>
                   </div>
                 </div>
@@ -155,8 +157,12 @@ use App\Libraries\Authz;
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col">
-                    <h2 class="fw-bold text-md">Welcome to Magang PDAM</h2>
-                    <div class="text-secondary"><?= isset($proposal['status']) ? 'Please wait, your proposal is still under review.' : 'Please propose a proposal to apply for internship.' ?></div>
+                    <h2 class="fw-bold text-md">Selamat Datang di Magang PDAM</h2>
+                    <div class="text-secondary">
+                        <?= isset($proposal['status'])
+                            ? 'Mohon tunggu, proposal Anda sedang ditinjau.'
+                            : 'Silakan ajukan proposal untuk mendaftar magang.' ?>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -167,8 +173,8 @@ use App\Libraries\Authz;
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-auto">
-                    <span class="bg-primary text-white avatar"
-                    ><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
+                    <span class="bg-primary text-white avatar">
+                      <!-- Download SVG icon from http://tabler.io/icons/icon/file-import -->
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-import">
@@ -180,7 +186,7 @@ use App\Libraries\Authz;
                   </div>
                   <div class="col">
                     <div class="font-weight-medium">Proposal</div>
-                    <div class="text-secondary"><?= $proposal['status'] ?? 'not submitted' ?></div>
+                    <div class="text-secondary"><?= $proposal['status'] ?? 'belum diajukan' ?></div>
                   </div>
                 </div>
               </div>
@@ -189,142 +195,143 @@ use App\Libraries\Authz;
         </div>
       </div>
     <?php endif ?>
-  
-  <?php if(Authz::any(['admin', 'supervisor'])): ?>
-    <div class="col-12">
-      <div class="row">
-        <div class="col-4">
-          <div class="card card-sm">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col">
-                  <h2 class="fw-bold text-md">Welcome to Magang PDAM</h2>
-                  <div class="text-secondary">A place to start your dream</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="card card-sm">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <span class="bg-primary text-white avatar"
-                  ><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="icon icon-tabler icons-tabler-outline icon-tabler-file-import">
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                      <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                      <path d="M5 13v-8a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5.5m-9.5 -2h7m-3 -3l3 3l-3 3" />
-                    </svg>
-                  </span>
-                </div>
-                <div class="col">
-                  <div class="font-weight-medium">Proposals</div>
-                  <div class="text-secondary"><?= $proposalCounts['pending'] ?> pending</div>
-                  <div class="text-secondary"><?= $proposalCounts['approved'] ?> approved</div>
-                  <div class="text-secondary"><?= $proposalCounts['rejected'] ?> rejected</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="card card-sm">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <span class="bg-primary text-white avatar"
-                  ><!-- Download SVG icon from http://tabler.io/icons/icon/currency-dollar -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="icon icon-tabler icons-tabler-outline icon-tabler-file-isr">
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                      <path d="M15 3v4a1 1 0 0 0 1 1h4" />
-                      <path d="M15 3v4a1 1 0 0 0 1 1h4" />
-                      <path d="M6 8v-3a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-7" />
-                      <path d="M3 15l3 -3l3 3" />
-                    </svg>
-                  </span>
-                </div>
-                <div class="col">
-                  <div class="font-weight-medium">Final Reports</div>
-                  <div class="text-secondary"><?= $finalReportCounts['pending'] ?> pending</div>
-                  <div class="text-secondary"><?= $finalReportCounts['approved'] ?> approved</div>
-                  <div class="text-secondary"><?= $finalReportCounts['rejected'] ?> rejected</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-  <div class="col-12 mt-4">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex">
-          <h3 class="card-title">Proposals <?= date('Y') ?></h3>
-        </div>
+    
+    <?php if(Authz::any(['admin', 'supervisor'])): ?>
+      <div class="col-12">
         <div class="row">
-          <div class="col">
-            <div id="chart-proposals-this-month"></div>
+          <div class="col-4">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h2 class="fw-bold text-md">Selamat Datang di Magang PDAM</h2>
+                    <div class="text-secondary">Tempat untuk memulai mimpimu</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="col-md-auto">
-            <div class="divide-y divide-y-fill">
-              <div class="px-3">
-                <div class="text-secondary"><span class="status-dot bg-primary"></span> Pending</div>
-                <div class="h2"><?= $proposalsThisYearCount['pending'] ?></div>
+          
+          <div class="col-4">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-primary text-white avatar">
+                      <!-- Icon File Import -->
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                           class="icon icon-tabler icons-tabler-outline icon-tabler-file-import">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                        <path d="M5 13v-8a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5.5m-9.5 -2h7m-3 -3l3 3l-3 3" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <div class="font-weight-medium">Proposal</div>
+                    <div class="text-secondary"><?= $proposalCounts['pending'] ?> menunggu</div>
+                    <div class="text-secondary"><?= $proposalCounts['approved'] ?> disetujui</div>
+                    <div class="text-secondary"><?= $proposalCounts['rejected'] ?> ditolak</div>
+                  </div>
+                </div>
               </div>
-              <div class="px-3">
-                <div class="text-secondary"><span class="status-dot bg-green"></span> Approved</div>
-                <div class="h2"><?= $proposalsThisYearCount['approved'] ?></div>
+            </div>
+          </div>
+          
+          <div class="col-4">
+            <div class="card card-sm">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="bg-primary text-white avatar">
+                      <!-- Icon File ISR -->
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                           class="icon icon-tabler icons-tabler-outline icon-tabler-file-isr">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M15 3v4a1 1 0 0 0 1 1h4" />
+                        <path d="M15 3v4a1 1 0 0 0 1 1h4" />
+                        <path d="M6 8v-3a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-7" />
+                        <path d="M3 15l3 -3l3 3" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <div class="font-weight-medium">Laporan Akhir</div>
+                    <div class="text-secondary"><?= $finalReportCounts['pending'] ?> menunggu</div>
+                    <div class="text-secondary"><?= $finalReportCounts['approved'] ?> disetujui</div>
+                    <div class="text-secondary"><?= $finalReportCounts['rejected'] ?> ditolak</div>
+                  </div>
+                </div>
               </div>
-              <div class="px-3">
-                <div class="text-secondary"><span class="status-dot bg-red"></span> Rejected</div>
-                <div class="h2"><?= $proposalsThisYearCount['rejected'] ?></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12 mt-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex">
+                <h3 class="card-title">Proposal <?= date('Y') ?></h3>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div id="chart-proposals-this-month"></div>
+                </div>
+                <div class="col-md-auto">
+                  <div class="divide-y divide-y-fill">
+                    <div class="px-3">
+                      <div class="text-secondary"><span class="status-dot bg-primary"></span> Menunggu</div>
+                      <div class="h2"><?= $proposalsThisYearCount['pending'] ?></div>
+                    </div>
+                    <div class="px-3">
+                      <div class="text-secondary"><span class="status-dot bg-green"></span> Disetujui</div>
+                      <div class="h2"><?= $proposalsThisYearCount['approved'] ?></div>
+                    </div>
+                    <div class="px-3">
+                      <div class="text-secondary"><span class="status-dot bg-red"></span> Ditolak</div>
+                      <div class="h2"><?= $proposalsThisYearCount['rejected'] ?></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12 mt-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex">
+                <h3 class="card-title">Laporan Akhir <?= date('Y') ?></h3>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div id="chart-final-reports-this-month"></div>
+                </div>
+                <div class="col-md-auto">
+                  <div class="divide-y divide-y-fill">
+                    <div class="px-3">
+                      <div class="text-secondary"><span class="status-dot bg-primary"></span> Menunggu</div>
+                      <div class="h2"><?= $finalReportsThisYearCount['pending'] ?></div>
+                    </div>
+                    <div class="px-3">
+                      <div class="text-secondary"><span class="status-dot bg-green"></span> Disetujui</div>
+                      <div class="h2"><?= $finalReportsThisYearCount['approved'] ?></div>
+                    </div>
+                    <div class="px-3">
+                      <div class="text-secondary"><span class="status-dot bg-red"></span> Ditolak</div>
+                      <div class="h2"><?= $finalReportsThisYearCount['rejected'] ?></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  
-  <div class="col-12 mt-4">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex">
-          <h3 class="card-title">Final Reports <?= date('Y') ?></h3>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div id="chart-final-reports-this-month"></div>
-          </div>
-          <div class="col-md-auto">
-            <div class="divide-y divide-y-fill">
-              <div class="px-3">
-                <div class="text-secondary"><span class="status-dot bg-primary"></span> Pending</div>
-                <div class="h2"><?= $finalReportsThisYearCount['pending'] ?></div>
-              </div>
-              <div class="px-3">
-                <div class="text-secondary"><span class="status-dot bg-green"></span> Approved</div>
-                <div class="h2"><?= $finalReportsThisYearCount['approved'] ?></div>
-              </div>
-              <div class="px-3">
-                <div class="text-secondary"><span class="status-dot bg-red"></span> Rejected</div>
-                <div class="h2"><?= $finalReportsThisYearCount['rejected'] ?></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <?php endif ?>
-</div>
+    <?php endif ?>
 </div>
 <?= $this->endSection() ?>
 
@@ -365,141 +372,141 @@ use App\Libraries\Authz;
     // proposals chart
     new ApexCharts($('#chart-proposals-this-month')[0], {
       chart: {
-        type: "line",
-        fontFamily: "inherit",
+        type: 'line',
+        fontFamily: 'inherit',
         height: 288,
         parentHeightOffset: 0,
         toolbar: {
-          show: false,
+          show: false
         },
         animations: {
-          enabled: false,
-        },
+          enabled: false
+        }
       },
       stroke: {
         width: 2,
-        lineCap: "round",
-        curve: "smooth",
+        lineCap: 'round',
+        curve: 'smooth'
       },
       series: [
         {
-          name: "Pending",
-          data: <?= json_encode($proposalsThisYearPerMonthCount['pending'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
+          name: 'Pending',
+          data: <?= json_encode($proposalsThisYearPerMonthCount['pending'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
         },
         {
-          name: "Approved",
-          data: <?= json_encode($proposalsThisYearPerMonthCount['approved'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
+          name: 'Approved',
+          data: <?= json_encode($proposalsThisYearPerMonthCount['approved'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
         },
         {
-          name: "Rejected",
-          data: <?= json_encode($proposalsThisYearPerMonthCount['rejected'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
-        },
+          name: 'Rejected',
+          data: <?= json_encode($proposalsThisYearPerMonthCount['rejected'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
+        }
       ],
       tooltip: {
-        theme: "dark",
+        theme: 'dark'
       },
       grid: {
         padding: {
           top: -20,
           right: 0,
           left: -4,
-          bottom: -4,
+          bottom: -4
         },
-        strokeDashArray: 4,
+        strokeDashArray: 4
       },
       xaxis: {
         labels: {
-          padding: 0,
+          padding: 0
         },
         tooltip: {
-          enabled: false,
+          enabled: false
         },
-        type: "category",
+        type: 'category'
       },
       yaxis: {
         labels: {
-          padding: 4,
-        },
+          padding: 4
+        }
       },
       labels: <?= json_encode($labelsMonths, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
       colors: [
-        "color-mix(in srgb, transparent, var(--tblr-primary) 100%)",
-        "color-mix(in srgb, transparent, var(--tblr-azure) 100%)",
-        "color-mix(in srgb, transparent, var(--tblr-green) 100%)",
+        'color-mix(in srgb, transparent, var(--tblr-primary) 100%)',
+        'color-mix(in srgb, transparent, var(--tblr-azure) 100%)',
+        'color-mix(in srgb, transparent, var(--tblr-green) 100%)'
       ],
       legend: {
-        show: false,
-      },
+        show: false
+      }
     }).render();
-    
+
     // final reports chart
     new ApexCharts($('#chart-final-reports-this-month')[0], {
       chart: {
-        type: "line",
-        fontFamily: "inherit",
+        type: 'line',
+        fontFamily: 'inherit',
         height: 288,
         parentHeightOffset: 0,
         toolbar: {
-          show: false,
+          show: false
         },
         animations: {
-          enabled: false,
-        },
+          enabled: false
+        }
       },
       stroke: {
         width: 2,
-        lineCap: "round",
-        curve: "smooth",
+        lineCap: 'round',
+        curve: 'smooth'
       },
       series: [
         {
-          name: "Pending",
-          data: <?= json_encode($finalReportsThisYearPerMonthCount['pending'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
+          name: 'Pending',
+          data: <?= json_encode($finalReportsThisYearPerMonthCount['pending'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
         },
         {
-          name: "Approved",
-          data: <?= json_encode($finalReportsThisYearPerMonthCount['approved'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
+          name: 'Approved',
+          data: <?= json_encode($finalReportsThisYearPerMonthCount['approved'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
         },
         {
-          name: "Rejected",
-          data: <?= json_encode($finalReportsThisYearPerMonthCount['rejected'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
-        },
+          name: 'Rejected',
+          data: <?= json_encode($finalReportsThisYearPerMonthCount['rejected'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
+        }
       ],
       tooltip: {
-        theme: "dark",
+        theme: 'dark'
       },
       grid: {
         padding: {
           top: -20,
           right: 0,
           left: -4,
-          bottom: -4,
+          bottom: -4
         },
-        strokeDashArray: 4,
+        strokeDashArray: 4
       },
       xaxis: {
         labels: {
-          padding: 0,
+          padding: 0
         },
         tooltip: {
-          enabled: false,
+          enabled: false
         },
-        type: "category",
+        type: 'category'
       },
       yaxis: {
         labels: {
-          padding: 4,
-        },
+          padding: 4
+        }
       },
       labels: <?= json_encode($labelsMonths, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>,
       colors: [
-        "color-mix(in srgb, transparent, var(--tblr-primary) 100%)",
-        "color-mix(in srgb, transparent, var(--tblr-azure) 100%)",
-        "color-mix(in srgb, transparent, var(--tblr-green) 100%)",
+        'color-mix(in srgb, transparent, var(--tblr-primary) 100%)',
+        'color-mix(in srgb, transparent, var(--tblr-azure) 100%)',
+        'color-mix(in srgb, transparent, var(--tblr-green) 100%)'
       ],
       legend: {
-        show: false,
-      },
+        show: false
+      }
     }).render();
     <?php endif ?>
 </script>

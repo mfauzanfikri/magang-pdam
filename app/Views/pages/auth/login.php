@@ -10,25 +10,25 @@
       <?= $this->include('components/error-alert') ?>
     
     <div class="mb-3">
-      <p>Please log in to access the system.</p>
+      <p>Silakan masuk untuk mengakses sistem.</p>
     </div>
     <div class="mb-3">
-      <label class="form-label required" for="login-email">Email address</label>
+      <label class="form-label required" for="login-email">Email</label>
       <div>
         <input id="login-email" name="email" type="email" class="form-control" aria-describedby="emailHelp"
-               placeholder="Enter email" autocomplete="off" required />
+               placeholder="Masukkan email" autocomplete="off" required />
       </div>
     </div>
     <div class="mb-3">
-      <label class="form-label required" for="login-password">Password</label>
+      <label class="form-label required" for="login-password">Kata Sandi</label>
       <div>
-        <input id="login-password" name="password" type="password" class="form-control" placeholder="Password"
+        <input id="login-password" name="password" type="password" class="form-control" placeholder="Masukkan kata sandi"
                required />
       </div>
     </div>
   </div>
   <div class="card-footer text-end">
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-primary">Masuk</button>
   </div>
 </form>
 <?= $this->endSection() ?>

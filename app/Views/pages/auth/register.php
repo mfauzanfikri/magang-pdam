@@ -9,32 +9,32 @@
       <?= $this->include('components/error-alert') ?>
     
     <div class="mb-3">
-      <p>Register to apply for internship.</p>
+      <p>Daftar untuk mengajukan magang.</p>
     </div>
     <div class="mb-3">
-      <label class="form-label required" for="login-name">Name</label>
+      <label class="form-label required" for="login-name">Nama</label>
       <div>
         <input id="login-name" name="name" type="text" class="form-control" aria-describedby="nameHelp"
-               placeholder="Enter name" autocomplete="off" required />
+               placeholder="Masukkan nama" autocomplete="off" required />
       </div>
     </div>
     <div class="mb-3">
-      <label class="form-label required" for="login-email">Email address</label>
+      <label class="form-label required" for="login-email">Email</label>
       <div>
         <input id="login-email" name="email" type="email" class="form-control" aria-describedby="emailHelp"
-               placeholder="Enter email" autocomplete="off" required />
+               placeholder="Masukkan email" autocomplete="off" required />
       </div>
     </div>
     <div class="mb-3">
-      <label class="form-label required" for="login-password">Password</label>
+      <label class="form-label required" for="login-password">Kata Sandi</label>
       <div>
-        <input id="login-password" name="password" type="password" class="form-control" placeholder="Password"
+        <input id="login-password" name="password" type="password" class="form-control" placeholder="Masukkan kata sandi"
                required />
       </div>
     </div>
   </div>
   <div class="card-footer text-end">
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" class="btn btn-primary">Daftar</button>
   </div>
 </form>
 <?= $this->endSection() ?>

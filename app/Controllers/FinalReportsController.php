@@ -32,23 +32,20 @@ class FinalReportsController extends BaseController
     {
         $userId = AuthUser::id();
         
-        // Get base query
         $query = $this->finalReportModel->withProposal()->withCertificate();
         
         if (Authz::any(['candidate', 'intern', 'graduate'])) {
             $query->belongsToUser($userId);
         }
         
-        // Fetch and process data
         $raw = $query->orderBy('id', 'desc')->findAll();
         $finalReports = $this->finalReportModel->processJsonFields($raw);
         
         $data = [
-            'title' => 'Final Reports',
+            'title' => 'Laporan Akhir',
         ];
         
         if (Authz::any(['admin', 'supervisor'])) {
-            // Group by status for admin/supervisor view
             $finalReportsByStatus = [
                 'pending' => [],
                 'approved' => [],
@@ -62,7 +59,6 @@ class FinalReportsController extends BaseController
             
             $data['finalReportsByStatus'] = $finalReportsByStatus;
         } else {
-            // Intern/candidate/graduate view
             $data['finalReports'] = $finalReports;
             
             $activeProposal = $this->proposalModel
@@ -89,24 +85,22 @@ class FinalReportsController extends BaseController
     {
         $userId = AuthUser::id();
         
-        // === Find active proposal where user is the leader ===
         $proposal = $this->proposalModel
             ->where('leader_id', $userId)
             ->active()
             ->first();
         
         if (!$proposal) {
-            return redirect()->back()->with('errors', 'You are not allowed to submit a final report or you don’t have an active proposal.');
+            return redirect()->back()->with('errors', 'Anda tidak diizinkan mengirim laporan akhir atau tidak memiliki proposal aktif.');
         }
         
-        // === Validate inputs ===
         $rules = [
             'title' => 'required|max_length[100]',
             'file' => [
                 'uploaded[file]',
                 'ext_in[file,pdf]',
                 'mime_in[file,application/pdf]',
-                'max_size[file,5120]', // 5MB
+                'max_size[file,5120]',
             ],
         ];
         
@@ -114,12 +108,10 @@ class FinalReportsController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
         
-        // === Upload the file ===
         $file = $this->request->getFile('file');
         $filename = \Ramsey\Uuid\Uuid::uuid4()->toString() . '.pdf';
         $file->move(WRITEPATH . 'uploads/final-reports', $filename);
         
-        // === Save final report ===
         $this->finalReportModel->insert([
             'proposal_id' => $proposal['id'],
             'title' => $this->request->getPost('title'),
@@ -128,7 +120,7 @@ class FinalReportsController extends BaseController
             'note' => null,
         ]);
         
-        return redirect()->back()->withInput()->with('message', 'Final report submitted successfully.');
+        return redirect()->back()->withInput()->with('message', 'Laporan akhir berhasil dikirim.');
     }
     
     public function delete($id)
@@ -136,12 +128,12 @@ class FinalReportsController extends BaseController
         $user = $this->finalReportModel->find($id);
         
         if(!$user) {
-            return redirect()->back()->withInput()->with('errors', 'Final report not found.');
+            return redirect()->back()->withInput()->with('errors', 'Laporan akhir tidak ditemukan.');
         }
         
         $this->finalReportModel->delete($id);
         
-        return redirect()->back()->withInput()->with('message', 'Final report deleted successfully.');
+        return redirect()->back()->withInput()->with('message', 'Laporan akhir berhasil dihapus.');
     }
     
     public function approval($id)
@@ -172,14 +164,12 @@ class FinalReportsController extends BaseController
             'note' => $notes,
         ]);
         
-        // If approved, change leader and members role to 'graduate'
         if ($approval === 'approved') {
             $proposal = $this->proposalModel->where('id', $finalReport['proposal_id'])->first();
             
             if ($proposal) {
                 $userIds = [$proposal['leader_id']];
                 
-                // Add member IDs
                 $memberIds = $this->proposalMemberModel
                     ->where('proposal_id', $proposal['id'])
                     ->findAll();
@@ -188,10 +178,8 @@ class FinalReportsController extends BaseController
                     $userIds[] = $member['user_id'];
                 }
                 
-                // Remove duplicates
                 $userIds = array_unique($userIds);
                 
-                // Update roles
                 $this->userModel
                     ->whereIn('id', $userIds)
                     ->set(['role' => 'graduate'])
@@ -199,7 +187,7 @@ class FinalReportsController extends BaseController
             }
         }
         
-        return redirect()->back()->with('message', 'Final report has been ' . $approval . '.');
+        return redirect()->back()->with('message', 'Laporan akhir berhasil ' . ($approval === 'approved' ? 'disetujui' : 'ditolak') . '.');
     }
     
     public function issueCertificate($id)
@@ -210,14 +198,13 @@ class FinalReportsController extends BaseController
             ->first();
         
         if (!$finalReport) {
-            throw new PageNotFoundException('Final report not found.');
+            throw new PageNotFoundException('Laporan akhir tidak ditemukan.');
         }
         
         $decoded = $this->finalReportModel->processJsonFields([$finalReport])[0];
         $proposal = $decoded['proposal'];
         $userIds = [];
         
-        // Collect all user IDs: leader and members
         if ($proposal['leader']) {
             $userIds[] = $proposal['leader']['id'];
         }
@@ -226,7 +213,6 @@ class FinalReportsController extends BaseController
             $userIds[] = $member['id'];
         }
         
-        // Validate files for each user
         foreach ($userIds as $userId) {
             $fieldName = 'file_' . $userId;
             
@@ -265,7 +251,7 @@ class FinalReportsController extends BaseController
             $this->certificateModel->insertBatch($records);
         }
         
-        return redirect()->to('/final-reports')->with('message', 'Certificates issued successfully.');
+        return redirect()->to('/final-reports')->with('message', 'Sertifikat berhasil diterbitkan.');
     }
     
     public function getFile($id)
@@ -284,7 +270,7 @@ class FinalReportsController extends BaseController
             }
         }
         
-        throw PageNotFoundException::forPageNotFound("File not found.");
+        throw PageNotFoundException::forPageNotFound("File tidak ditemukan.");
     }
     
     public function downloadFile($id)
@@ -299,7 +285,7 @@ class FinalReportsController extends BaseController
             }
         }
         
-        throw PageNotFoundException::forPageNotFound("File not found.");
+        throw PageNotFoundException::forPageNotFound("File tidak ditemukan.");
     }
     
     public function getCertificateFile($finalReportId, $userId)
@@ -310,13 +296,13 @@ class FinalReportsController extends BaseController
             ->first();
         
         if (!$certificate || empty($certificate['file_path'])) {
-            throw new PageNotFoundException('Certificate not found.');
+            throw new PageNotFoundException('Sertifikat tidak ditemukan.');
         }
         
         $fullPath = WRITEPATH . $certificate['file_path'];
         
         if (!is_file($fullPath)) {
-            throw new PageNotFoundException('File not found.');
+            throw new PageNotFoundException('File tidak ditemukan.');
         }
         
         return response()

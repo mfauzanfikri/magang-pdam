@@ -21,7 +21,7 @@ class UsersController extends BaseController
         $users = $this->usersModel->select('id,name,email,role,status,created_at,updated_at')->orderBy('id', 'desc')->findAll();
         
         $data = [
-            'title' => 'Users',
+            'title' => 'User',
             'users' => $users,
         ];
         
@@ -51,7 +51,7 @@ class UsersController extends BaseController
             'password' => password_hash('123456', PASSWORD_DEFAULT),
         ]);
         
-        return redirect()->to('/masters/users')->with('message', 'User created successfully.');
+        return redirect()->to('/masters/users')->with('message', 'User berhasil ditambahkan.');
     }
     
     public function update($id)
@@ -72,7 +72,7 @@ class UsersController extends BaseController
         
         $this->usersModel->update($id, $validated);
         
-        return redirect()->to('/masters/users')->with('message', 'User updated successfully.');
+        return redirect()->to('/masters/users')->with('message', 'Data pengguna berhasil diperbarui.');
     }
     
     public function delete($id)
@@ -80,11 +80,11 @@ class UsersController extends BaseController
         $user = $this->usersModel->find($id);
         
         if(!$user) {
-            return redirect()->back()->withInput()->with('errors', 'User not found.');
+            return redirect()->back()->withInput()->with('errors', 'User tidak ditemukan.');
         }
         
         $this->usersModel->delete($id);
         
-        return redirect()->to('/masters/users')->with('message', 'User deleted successfully.');
+        return redirect()->to('/masters/users')->with('message', 'User berhasil dihapus.');
     }
 }

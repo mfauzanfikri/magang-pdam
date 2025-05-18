@@ -29,7 +29,7 @@ helper('row_data') ?>
       <path d="M12 5l0 14" />
       <path d="M5 12l14 0" />
     </svg>
-    Create new final report
+    Tambah laporan akhir
   </button>
   <button
     class="btn btn-primary btn-6 d-sm-none btn-icon"
@@ -67,17 +67,17 @@ helper('row_data') ?>
       <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
         <li class="nav-item">
           <a href="#tab-pending-final-reports" class="nav-link active" data-bs-toggle="tab">
-            Pending
+            Menunggu Persetujuan
           </a>
         </li>
         <li class="nav-item">
           <a href="#tab-approved-final-reports" class="nav-link" data-bs-toggle="tab">
-            Approved
+            Disetujui
           </a>
         </li>
         <li class="nav-item">
           <a href="#tab-rejected-final-reports" class="nav-link" data-bs-toggle="tab">
-            Rejected
+            Ditolak
           </a>
         </li>
       </ul>
@@ -85,21 +85,21 @@ helper('row_data') ?>
     <div class="card-body">
       <div id="table-loader" class="text-center my-4">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">Memuat...</span>
         </div>
       </div>
       <div class="tab-content d-none">
-        <!-- pending final reports tab -->
+        <!-- Tab: Menunggu Persetujuan -->
         <div class="tab-pane active show" id="tab-pending-final-reports">
           <div id="pending-final-reports-table-wrapper">
             <table id="pending-final-reports-table" class="table table-striped">
               <thead>
               <tr>
-                <th>Title</th>
-                <th>Institution</th>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Actions</th>
+                <th>Judul</th>
+                <th>Instansi</th>
+                <th>Nama Ketua</th>
+                <th>Kelompok</th>
+                <th>Aksi</th>
               </tr>
               </thead>
               <tbody>
@@ -108,12 +108,12 @@ helper('row_data') ?>
                   <td><?= $finalReport['title'] ?></td>
                   <td><?= $finalReport['proposal']['institution'] ?></td>
                   <td><?= $finalReport['proposal']['leader']['name'] ?></td>
-                  <td><?= $finalReport['proposal']['is_group'] ? 'Yes' : 'No' ?></td>
+                  <td><?= $finalReport['proposal']['is_group'] ? 'Ya' : 'Tidak' ?></td>
                   <td>
                     <button class="btn-approval btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-final-report-approval"
                             data-row="<?= encode_row_data($finalReport) ?>">
-                      Approval
+                      Persetujuan
                     </button>
                   </td>
                 </tr>
@@ -122,17 +122,18 @@ helper('row_data') ?>
             </table>
           </div>
         </div>
-        <!-- approved final report tab -->
+        
+        <!-- Tab: Disetujui -->
         <div class="tab-pane" id="tab-approved-final-reports">
           <div id="approved-final-reports-table-wrapper">
             <table id="approved-final-reports-table" class="table table-striped">
               <thead>
               <tr>
-                <th>Title</th>
-                <th>Institution</th>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Actions</th>
+                <th>Judul</th>
+                <th>Instansi</th>
+                <th>Nama Ketua</th>
+                <th>Kelompok</th>
+                <th>Aksi</th>
               </tr>
               </thead>
               <tbody>
@@ -141,7 +142,7 @@ helper('row_data') ?>
                   <td><?= $finalReport['title'] ?></td>
                   <td><?= $finalReport['proposal']['institution'] ?></td>
                   <td><?= $finalReport['proposal']['leader']['name'] ?></td>
-                  <td><?= $finalReport['proposal']['is_group'] ? 'Yes' : 'No' ?></td>
+                  <td><?= $finalReport['proposal']['is_group'] ? 'Ya' : 'Tidak' ?></td>
                   <td>
                     <button class="btn-detail btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-final-report-detail"
@@ -153,7 +154,7 @@ helper('row_data') ?>
                                 data-bs-toggle="modal"
                                 data-bs-target="#modal-issue-certificate"
                                 data-row="<?= encode_row_data($finalReport) ?>">
-                          Issue Certificate
+                          Terbitkan Sertifikat
                         </button>
                       <?php endif ?>
                   </td>
@@ -163,17 +164,18 @@ helper('row_data') ?>
             </table>
           </div>
         </div>
-        <!-- rejected final report tab -->
+        
+        <!-- Tab: Ditolak -->
         <div class="tab-pane" id="tab-rejected-final-reports">
           <div id="rejected-final-reports-table-wrapper">
             <table id="rejected-final-reports-table" class="table table-striped">
               <thead>
               <tr>
-                <th>Title</th>
-                <th>Institution</th>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Actions</th>
+                <th>Judul</th>
+                <th>Instansi</th>
+                <th>Nama Ketua</th>
+                <th>Kelompok</th>
+                <th>Aksi</th>
               </tr>
               </thead>
               <tbody>
@@ -182,7 +184,7 @@ helper('row_data') ?>
                   <td><?= $finalReport['title'] ?></td>
                   <td><?= $finalReport['proposal']['institution'] ?></td>
                   <td><?= $finalReport['proposal']['leader']['name'] ?></td>
-                  <td><?= $finalReport['proposal']['is_group'] ? 'Yes' : 'No' ?></td>
+                  <td><?= $finalReport['proposal']['is_group'] ? 'Ya' : 'Tidak' ?></td>
                   <td>
                     <button class="btn-detail btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-final-report-detail"
@@ -207,11 +209,11 @@ helper('row_data') ?>
       <table id="user-final-reports-table" class="table table-striped">
         <thead>
         <tr>
-          <th>Title</th>
-          <th>Institution</th>
-          <th>Group</th>
+          <th>Judul</th>
+          <th>Instansi</th>
+          <th>Kelompok</th>
           <th>Status</th>
-          <th>Actions</th>
+          <th>Aksi</th>
         </tr>
         </thead>
         <tbody>
@@ -219,7 +221,7 @@ helper('row_data') ?>
           <tr>
             <td><?= $finalReport['title'] ?></td>
             <td><?= $finalReport['proposal']['institution'] ?></td>
-            <td><?= $finalReport['proposal']['is_group'] ? 'Yes' : 'No' ?></td>
+            <td><?= $finalReport['proposal']['is_group'] ? 'Ya' : 'Tidak' ?></td>
             <td><?= $finalReport['status'] ?></td>
             <td>
               <button class="btn-detail btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
@@ -231,7 +233,7 @@ helper('row_data') ?>
                   <button class="btn-delete btn btn-danger btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                           data-bs-target="#modal-delete-final-report"
                           data-id="<?= $finalReport['id'] ?>">
-                    Delete
+                    Hapus
                   </button>
                 <?php endif ?>
             </td>

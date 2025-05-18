@@ -2,27 +2,27 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Change Password</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Ubah Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <form action="<?= base_url('/change-password') ?>" method="post">
           <?= csrf_field() ?>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label required" for="password">Password</label>
+            <label class="form-label required" for="password">Password Saat Ini</label>
             <input id="password" name="password" type="password" class="form-control" required />
           </div>
           <div class="mb-3">
-            <label class="form-label required" for="new-password">New Password</label>
+            <label class="form-label required" for="new-password">Password Baru</label>
             <input id="new-password" name="new_password" type="password" class="form-control" required />
           </div>
           <div class="mb-3">
-            <label class="form-label required" for="confirm-password">Confirm Password</label>
+            <label class="form-label required" for="confirm-password">Konfirmasi Password Baru</label>
             <input id="confirm-password" name="confirm_password" type="password" class="form-control" required />
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal"> Cancel</button>
+          <button class="btn btn-link link-secondary btn-3" data-bs-dismiss="modal">Batal</button>
           <button type="submit" class="btn btn-primary btn-5 ms-auto">
             <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
             <svg
@@ -40,7 +40,7 @@
               <path d="M12 5l0 14" />
               <path d="M5 12l14 0" />
             </svg>
-            Submit
+            Simpan Perubahan
           </button>
         </div>
       </form>

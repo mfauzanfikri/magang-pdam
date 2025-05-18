@@ -11,11 +11,11 @@ use App\Libraries\AuthUser;
 
 <div class="card">
   <div class="card-body">
-    <h2 class="mb-4">My Account</h2>
-    <h3 class="card-title">Profile Details</h3>
+    <h2 class="mb-4">Akun Saya</h2>
+    <h3 class="card-title">Detail Profil</h3>
     <div class="row g-3">
       <div class="col-4">
-        <h3 class="card-title">Name</h3>
+        <h3 class="card-title">Nama</h3>
         <input type="text" class="form-control" value="<?= AuthUser::name() ?>" readonly />
       </div>
     </div>
@@ -29,10 +29,11 @@ use App\Libraries\AuthUser;
     </div>
     <h3 class="card-title mt-4">Password</h3>
     <div>
-      <button class="btn btn-1" data-bs-toggle="modal" data-bs-target="#modal-change-password"> Set new password </button>
+      <button class="btn btn-1" data-bs-toggle="modal" data-bs-target="#modal-change-password">Atur password baru</button>
     </div>
   </div>
 </div>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>

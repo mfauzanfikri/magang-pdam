@@ -28,7 +28,7 @@ helper('row_data') ?>
     <path d="M12 5l0 14" />
     <path d="M5 12l14 0" />
   </svg>
-  Create new activity
+  Tambah kegiatan
 </button>
 <button
   class="btn btn-primary btn-6 d-sm-none btn-icon"
@@ -72,12 +72,12 @@ helper('row_data') ?>
       <table id="activities-table" class="table table-striped">
         <thead>
         <tr>
-          <th>Name</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Date</th>
+          <th>Nama</th>
+          <th>Judul</th>
+          <th>Deskripsi</th>
+          <th>Tanggal</th>
           <th style="max-width: 200px; min-width: 100px">Photo</th>
-          <th>Actions</th>
+          <th>Aksi</th>
         </tr>
         </thead>
         <tbody>

@@ -1008,7 +1008,7 @@ $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
                     <path d="M3 15l3 -3l3 3" />
                   </svg>
                 </span>
-                <span class="nav-link-title"> Final Reports </span>
+                <span class="nav-link-title"> Laporan Akhir </span>
               </a>
             </li>
           <?php endif ?>
@@ -1029,7 +1029,7 @@ $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
                     <path d="M19 16v6" />
                   </svg>
                 </span>
-                <span class="nav-link-title"> Attendance </span>
+                <span class="nav-link-title"> Presensi </span>
               </a>
             </li>
             <!-- activities -->
@@ -1047,7 +1047,7 @@ $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
                     <path d="M8 15h2v2h-2z" />
                   </svg>
                 </span>
-                <span class="nav-link-title"> Activities </span>
+                <span class="nav-link-title"> Kegiatan </span>
               </a>
             </li>
           <?php endif ?>

@@ -2,8 +2,8 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Final Report Detail</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Detail Laporan Akhir</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <div class="modal-body">
         <table id="final-report-details-table" class="table table-striped">
@@ -14,25 +14,24 @@
           </thead>
           <tbody>
           <tr>
-            <td>Title</td>
+            <td>Judul</td>
             <td></td>
           </tr>
           <tr>
-            <td>Institution</td>
+            <td>Instansi</td>
             <td></td>
           </tr>
           <tr>
-            <td>Leader Name</td>
+            <td>Nama Ketua</td>
             <td></td>
           </tr>
           <tr class="d-none">
-            <td>Members</td>
+            <td>Anggota</td>
             <td></td>
           </tr>
           <tr>
-            <td>Final Report File</td>
-            <td>
-            </td>
+            <td>Berkas Laporan</td>
+            <td></td>
           </tr>
           </tbody>
         </table>

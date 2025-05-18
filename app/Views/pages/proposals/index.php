@@ -28,7 +28,7 @@ helper('row_data') ?>
       <path d="M12 5l0 14" />
       <path d="M5 12l14 0" />
     </svg>
-    Create new proposal
+    Tambah proposal
   </button>
   <button
     class="btn btn-primary btn-6 d-sm-none btn-icon"
@@ -66,17 +66,17 @@ helper('row_data') ?>
       <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
         <li class="nav-item">
           <a href="#tab-pending-proposals" class="nav-link active" data-bs-toggle="tab">
-            Pending
+            Menunggu
           </a>
         </li>
         <li class="nav-item">
           <a href="#tab-approved-proposals" class="nav-link" data-bs-toggle="tab">
-            Approved
+            Disetujui
           </a>
         </li>
         <li class="nav-item">
           <a href="#tab-rejected-proposals" class="nav-link" data-bs-toggle="tab">
-            Rejected
+            Ditolak
           </a>
         </li>
       </ul>
@@ -84,21 +84,21 @@ helper('row_data') ?>
     <div class="card-body">
       <div id="table-loader" class="text-center my-4">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">Memuat...</span>
         </div>
       </div>
       <div class="tab-content d-none">
-        <!-- pending proposals tab -->
+        <!-- Tab proposal menunggu -->
         <div class="tab-pane active show" id="tab-pending-proposals">
           <div id="pending-proposals-table-wrapper">
             <table id="pending-proposals-table" class="table table-striped">
               <thead>
               <tr>
-                <th>Title</th>
-                <th>Institution</th>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Actions</th>
+                <th>Judul</th>
+                <th>Institusi</th>
+                <th>Nama</th>
+                <th>Kelompok</th>
+                <th>Aksi</th>
               </tr>
               </thead>
               <tbody>
@@ -107,12 +107,12 @@ helper('row_data') ?>
                   <td><?= $proposal['title'] ?></td>
                   <td><?= $proposal['institution'] ?></td>
                   <td><?= $proposal['leader']['name'] ?></td>
-                  <td><?= $proposal['is_group'] ? 'Yes' : 'No' ?></td>
+                  <td><?= $proposal['is_group'] ? 'Ya' : 'Tidak' ?></td>
                   <td>
                     <button class="btn-approval btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-proposal-approval"
                             data-row="<?= encode_row_data($proposal) ?>">
-                      Approval
+                      Persetujuan
                     </button>
                   </td>
                 </tr>
@@ -121,17 +121,17 @@ helper('row_data') ?>
             </table>
           </div>
         </div>
-        <!-- approved proposal tab -->
+        <!-- Tab proposal disetujui -->
         <div class="tab-pane" id="tab-approved-proposals">
           <div id="approved-proposals-table-wrapper">
             <table id="approved-proposals-table" class="table table-striped">
               <thead>
               <tr>
-                <th>Title</th>
-                <th>Institution</th>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Actions</th>
+                <th>Judul</th>
+                <th>Institusi</th>
+                <th>Nama</th>
+                <th>Kelompok</th>
+                <th>Aksi</th>
               </tr>
               </thead>
               <tbody>
@@ -140,7 +140,7 @@ helper('row_data') ?>
                   <td><?= $proposal['title'] ?></td>
                   <td><?= $proposal['institution'] ?></td>
                   <td><?= $proposal['leader']['name'] ?></td>
-                  <td><?= $proposal['is_group'] ? 'Yes' : 'No' ?></td>
+                  <td><?= $proposal['is_group'] ? 'Ya' : 'Tidak' ?></td>
                   <td>
                     <button class="btn-detail btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-proposal-detail"
@@ -154,17 +154,17 @@ helper('row_data') ?>
             </table>
           </div>
         </div>
-        <!-- rejected proposal tab -->
+        <!-- Tab proposal ditolak -->
         <div class="tab-pane" id="tab-rejected-proposals">
           <div id="rejected-proposals-table-wrapper">
             <table id="rejected-proposals-table" class="table table-striped">
               <thead>
               <tr>
-                <th>Title</th>
-                <th>Institution</th>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Actions</th>
+                <th>Judul</th>
+                <th>Institusi</th>
+                <th>Nama</th>
+                <th>Kelompok</th>
+                <th>Aksi</th>
               </tr>
               </thead>
               <tbody>
@@ -173,7 +173,7 @@ helper('row_data') ?>
                   <td><?= $proposal['title'] ?></td>
                   <td><?= $proposal['institution'] ?></td>
                   <td><?= $proposal['leader']['name'] ?></td>
-                  <td><?= $proposal['is_group'] ? 'Yes' : 'No' ?></td>
+                  <td><?= $proposal['is_group'] ? 'Ya' : 'Tidak' ?></td>
                   <td>
                     <button class="btn-detail btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-proposal-detail"
@@ -198,12 +198,12 @@ helper('row_data') ?>
       <table id="user-proposals-table" class="table table-striped">
         <thead>
         <tr>
-          <th>Title</th>
-          <th>Institution</th>
-          <th>Name</th>
-          <th>Group</th>
-          <th>status</th>
-          <th>Actions</th>
+          <th>Judul</th>
+          <th>Institusi</th>
+          <th>Nama</th>
+          <th>Kelompok</th>
+          <th>Status</th>
+          <th>Aksi</th>
         </tr>
         </thead>
         <tbody>
@@ -212,7 +212,7 @@ helper('row_data') ?>
             <td><?= $proposal['title'] ?></td>
             <td><?= $proposal['institution'] ?></td>
             <td><?= $proposal['leader']['name'] ?></td>
-            <td><?= $proposal['is_group'] ? 'Yes' : 'No' ?></td>
+            <td><?= $proposal['is_group'] ? 'Ya' : 'Tidak' ?></td>
             <td><?= $proposal['status'] ?></td>
             <td>
               <button class="btn-detail btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
@@ -224,7 +224,7 @@ helper('row_data') ?>
                   <button class="btn-delete btn btn-danger btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
                           data-bs-target="#modal-delete-proposal"
                           data-id="<?= $proposal['id'] ?>">
-                    Delete
+                    Hapus
                   </button>
                 <?php endif ?>
             </td>
