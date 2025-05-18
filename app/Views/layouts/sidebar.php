@@ -993,7 +993,7 @@ $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
             <span class="nav-link-title"> Proposals </span>
           </a>
         </li>
-          <?php if(!Authz::any(['admin', 'supervisor', 'candidate'])): ?>
+          <?php if(!Authz::is('candidate')): ?>
             <!-- Final Reports -->
             <li class="nav-item <?= str_contains($currentPath, 'final-reports') ? 'active' : '' ?>">
               <a class="nav-link" href="<?= base_url('/final-reports') ?>">
@@ -1011,6 +1011,8 @@ $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
                 <span class="nav-link-title"> Final Reports </span>
               </a>
             </li>
+          <?php endif ?>
+          <?php if(!Authz::any(['admin', 'supervisor', 'candidate'])): ?>
             <!-- attendance -->
             <li class="nav-item <?= str_contains($currentPath, 'attendance') ? 'active' : '' ?>">
               <a class="nav-link" href="<?= base_url('/attendance') ?>">

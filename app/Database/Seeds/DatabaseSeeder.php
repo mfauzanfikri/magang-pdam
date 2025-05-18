@@ -161,9 +161,9 @@ class DatabaseSeeder extends Seeder
     {
         $faker = Factory::create();
         $destinationDir = WRITEPATH . 'uploads/final-reports/';
-        $statuses = ['pending', 'approved', 'rejected'];
         $data = [];
         
+        // === GRADUATE PROPOSALS (approved final report) ===
         $graduateUserIds = array_column(
             $this->db->table('users')->where('role', 'graduate')->get()->getResultArray(),
             'id'
@@ -171,6 +171,7 @@ class DatabaseSeeder extends Seeder
         
         $graduateProposals = $this->db->table('proposals')
             ->whereIn('leader_id', $graduateUserIds)
+            ->where('status', 'approved')
             ->get()->getResultArray();
         
         foreach ($graduateProposals as $proposal) {
@@ -188,6 +189,7 @@ class DatabaseSeeder extends Seeder
             ];
         }
         
+        // === INTERN PROPOSALS (pending final report) ===
         $internUserIds = array_column(
             $this->db->table('users')->where('role', 'intern')->get()->getResultArray(),
             'id'
@@ -195,11 +197,10 @@ class DatabaseSeeder extends Seeder
         
         $internProposals = $this->db->table('proposals')
             ->whereIn('leader_id', $internUserIds)
+            ->where('status', 'approved')
             ->get()->getResultArray();
         
-        shuffle($internProposals);
-        foreach ($statuses as $i => $status) {
-            $proposal = $internProposals[$i];
+        foreach ($internProposals as $proposal) {
             $filePath = $destinationDir . Uuid::uuid4()->toString() . '.pdf';
             copy(WRITEPATH . 'uploads/test.pdf', $filePath);
             
@@ -207,25 +208,8 @@ class DatabaseSeeder extends Seeder
                 'proposal_id' => $proposal['id'],
                 'title' => $faker->sentence(3),
                 'file_path' => str_replace(WRITEPATH, '', $filePath),
-                'status' => $status,
-                'note' => $status === 'rejected' ? $faker->sentence(6) : null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ];
-        }
-        
-        for ($i = count($statuses); $i < count($internProposals); $i++) {
-            $proposal = $internProposals[$i];
-            $status = $faker->randomElement($statuses);
-            $filePath = $destinationDir . Uuid::uuid4()->toString() . '.pdf';
-            copy(WRITEPATH . 'uploads/test.pdf', $filePath);
-            
-            $data[] = [
-                'proposal_id' => $proposal['id'],
-                'title' => $faker->sentence(3),
-                'file_path' => str_replace(WRITEPATH, '', $filePath),
-                'status' => $status,
-                'note' => $status === 'rejected' ? $faker->sentence(6) : null,
+                'status' => 'pending',
+                'note' => null,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
@@ -372,7 +356,6 @@ class DatabaseSeeder extends Seeder
         $data = [];
         
         foreach ($graduates as $user) {
-            // Find user's proposal
             $proposal = $this->db->table('proposals')
                 ->select('id')->where('leader_id', $user['id'])->get()->getFirstRow();
             
@@ -385,7 +368,7 @@ class DatabaseSeeder extends Seeder
             
             if (!$proposal) continue;
             
-            // Find approved final report for the proposal
+            // Find final report with status = approved
             $finalReport = $this->db->table('final_reports')
                 ->select('id')
                 ->where('proposal_id', $proposal->id)
@@ -395,12 +378,11 @@ class DatabaseSeeder extends Seeder
             
             if (!$finalReport) continue;
             
-            // Generate file
             $filePath = $destinationDir . Uuid::uuid4()->toString() . '.pdf';
             copy(WRITEPATH . 'uploads/test.pdf', $filePath);
             
             $data[] = [
-                'final_report_id' => $finalReport->id, // updated foreign key
+                'final_report_id' => $finalReport->id,
                 'user_id' => $user['id'],
                 'file_path' => str_replace(WRITEPATH, '', $filePath),
                 'created_at' => date('Y-m-d H:i:s'),

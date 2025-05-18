@@ -456,7 +456,7 @@ helper('row_data') ?>
     function initUser() {
       $('.btn-detail').off('click').on('click', function() {
         const finalReport = decodeRowData($(this).data('row'));
-
+        const isCertificateIssued = finalReport.is_certificate_issued;
         const detailsTable = $('#modal-final-report-detail table');
 
         detailsTable.find('tr:nth-child(1) td:nth-child(2)').text(finalReport.title);
@@ -464,8 +464,8 @@ helper('row_data') ?>
 
         if(finalReport.proposal.is_group) {
           detailsTable.find('tr:nth-child(3) td:nth-child(1)').text('Leader Name');
-          detailsTable.find('tr:nth-child(3) td:nth-child(2)').text(
-            finalReport.proposal.leader.name + ' / ' + finalReport.proposal.leader.email
+          detailsTable.find('tr:nth-child(3) td:nth-child(2)').html(
+            `${finalReport.proposal.leader.name} / ${finalReport.proposal.leader.email}${finalReport.is_certificate_issued ? ` <a href="/final-reports/${finalReport.id}/user/${finalReport.proposal.leader.id}/certificate" target="_blank">Download certificate</a>` : ''}`
           );
 
           const membersTd = detailsTable.find('tr:nth-child(4) td:nth-child(2)');
@@ -473,7 +473,7 @@ helper('row_data') ?>
           if(finalReport.proposal.members && finalReport.proposal.members.length > 0) {
             const ol = $('<ol></ol>');
             finalReport.proposal.members.forEach(member => {
-              ol.append(`<li>${member.name} / ${member.email}</li>`);
+              ol.append(`<li>${member.name} / ${member.email} ${isCertificateIssued ? `<a href="/final-reports/${finalReport.id}/user/${member.id}/certificate" target="_blank">Download certificate</a></li>` : ''}`);
             });
             membersTd.empty().append(ol);
           } else {
@@ -481,8 +481,8 @@ helper('row_data') ?>
           }
         } else {
           detailsTable.find('tr:nth-child(3) td:nth-child(1)').text('Name');
-          detailsTable.find('tr:nth-child(3) td:nth-child(2)').text(
-            finalReport.proposal.leader.name + ' / ' + finalReport.proposal.leader.email
+          detailsTable.find('tr:nth-child(3) td:nth-child(2)').html(
+            `${finalReport.proposal.leader.name} / ${finalReport.proposal.leader.email}${finalReport.is_certificate_issued ? ` <a href="/final-reports/${finalReport.id}/user/${finalReport.proposal.leader.id}/certificate" target="_blank">Download certificate</a>` : ''}`
           );
           detailsTable.find('tr:nth-child(4)').addClass('d-none');
         }

@@ -51,6 +51,7 @@ class FinalReportModel extends Model
     public function belongsToUser(int $userId)
     {
         return $this
+            ->distinct() // eliminate duplicate final_reports
             ->join('proposals', 'proposals.id = final_reports.proposal_id')
             ->groupStart()
             ->where('proposals.leader_id', $userId)
