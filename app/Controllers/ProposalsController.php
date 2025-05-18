@@ -53,12 +53,12 @@ class ProposalsController extends BaseController
                 $proposalsByStatus[$status][] = $proposal;
             }
             
-            $data['proposalByStatus'] = $proposalsByStatus;
+            $data['proposalsByStatus'] = $proposalsByStatus;
         } else {
             $data['proposals'] = $proposals;
             $data['userHasActiveProposal'] = $this->proposalModel->belongsToUser(AuthUser::id())->active()->first() !== null;
         }
-        
+       
         return view('pages/proposals/index', $data);
     }
     
@@ -182,30 +182,47 @@ class ProposalsController extends BaseController
     {
         $proposal = $this->proposalModel->where('id', $id)->first();
         
-        if(!$proposal) {
+        if (!$proposal) {
             throw new PageNotFoundException();
         }
         
         $validationRules = [
             'approval' => 'required|in_list[approved,rejected]',
-            'notes' => 'string'
+            'notes'    => 'permit_empty|string',
         ];
         
-        $notes = trim($this->request->getPost('notes') ?? '');
-        $notes = $notes !== '' ? $notes : null;
-        
-        if(!$this->validate($validationRules)) {
+        if (!$this->validate($validationRules)) {
             return redirect()->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
         }
         
         $approval = $this->request->getPost('approval');
+        $notes = trim($this->request->getPost('notes') ?? '') ?: null;
         
         $this->proposalModel->update($id, [
             'status' => $approval,
-            'notes' => $notes
+            'notes'  => $notes,
         ]);
+        
+        // If approved, update all related user roles to 'intern'
+        if ($approval === 'approved') {
+            $userIds = [$proposal['leader_id']];
+            
+            if ($proposal['is_group']) {
+                $members = $this->proposalMemberModel
+                    ->where('proposal_id', $proposal['id'])
+                    ->findAll();
+                
+                $memberIds = array_column($members, 'user_id');
+                $userIds = array_merge($userIds, $memberIds);
+            }
+            
+            $this->userModel
+                ->whereIn('id', array_unique($userIds))
+                ->set(['role' => 'intern'])
+                ->update();
+        }
         
         return redirect()->back()->with('message', 'Proposal has been ' . $approval . '.');
     }

@@ -1,4 +1,5 @@
-<?php use App\Libraries\Authz;
+<?php use App\Libraries\AuthUser;
+use App\Libraries\Authz;
 
 helper('row_data') ?>
 
@@ -226,9 +227,9 @@ helper('row_data') ?>
                       data-row="<?= encode_row_data($finalReport) ?>">
                 Detail
               </button>
-                <?php if($finalReport['status'] === 'pending'): ?>
+                <?php if($finalReport['status'] === 'pending' && $finalReport['proposal']['leader']['id'] === AuthUser::id()): ?>
                   <button class="btn-delete btn btn-danger btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-                          data-bs-target="#modal-delete-proposal"
+                          data-bs-target="#modal-delete-final-report"
                           data-id="<?= $finalReport['id'] ?>">
                     Delete
                   </button>

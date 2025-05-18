@@ -73,25 +73,40 @@ class ActivitiesController extends BaseController
                 'rules' => 'uploaded[photo_file]'
                     . '|is_image[photo_file]'
                     . '|mime_in[photo_file,image/jpg,image/jpeg,image/png]'
-                    . '|max_size[photo_file,2048]' // 2MB max
+                    . '|max_size[photo_file,2048]', // 2MB max
             ],
         ];
         
-        if(!$this->validate($rules)) {
+        if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+        
+        $userId = AuthUser::id();
+        
+        // Get user's active proposal
+        $proposal = $this->proposalModel
+            ->belongsToUser($userId)
+            ->active()
+            ->first();
+        
+        if (!$proposal) {
+            return redirect()->back()->withInput()->with('errors', [
+                'proposal' => 'No active proposal found for user.'
+            ]);
         }
         
         $file = $this->request->getFile('photo_file');
         $photoPath = '';
-        if($file->isValid() && !$file->hasMoved()) {
-            $newName = Uuid::uuid4()->toString();
+        
+        if ($file->isValid() && !$file->hasMoved()) {
+            $newName = \Ramsey\Uuid\Uuid::uuid4()->toString();
             $file->move(WRITEPATH . 'uploads/activities', $newName);
-            
             $photoPath = 'uploads/activities/' . $newName;
         }
         
         $validated = $this->validator->getValidated();
-        $validated['user_id'] = AuthUser::id();
+        $validated['user_id'] = $userId;
+        $validated['proposal_id'] = $proposal['id'];
         $validated['photo_path'] = $photoPath;
         
         $this->activitiesModel->insert($validated);

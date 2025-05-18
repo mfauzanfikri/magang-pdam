@@ -69,7 +69,7 @@ class AuthController extends BaseController
         $user = $this->userModel->where('email', $this->request->getPost('email'))->first();
         
         if(!$user || !password_verify($this->request->getPost('password'), $user['password'])) {
-            return redirect()->back()->with('error', 'Invalid credentials.')->withInput();
+            return redirect()->back()->with('errors', 'Invalid credentials.')->withInput();
         }
         
         session()->set([

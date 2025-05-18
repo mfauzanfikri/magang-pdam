@@ -1012,7 +1012,7 @@ $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
               </a>
             </li>
           <?php endif ?>
-          <?php if(!Authz::any(['admin', 'supervisor', 'candidate'])): ?>
+          <?php if(!Authz::is('candidate')): ?>
             <!-- attendance -->
             <li class="nav-item <?= str_contains($currentPath, 'attendance') ? 'active' : '' ?>">
               <a class="nav-link" href="<?= base_url('/attendance') ?>">
