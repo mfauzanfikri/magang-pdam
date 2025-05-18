@@ -14,13 +14,13 @@
     <div class="mb-3">
       <label class="form-label required" for="login-email">Email address</label>
       <div>
-        <input id="login-email" name="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" />
+        <input id="login-email" name="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" required />
       </div>
     </div>
     <div class="mb-3">
       <label class="form-label required" for="login-password">Password</label>
       <div>
-        <input id="login-password" name="password" type="password" class="form-control" placeholder="Password" />
+        <input id="login-password" name="password" type="password" class="form-control" placeholder="Password" required />
       </div>
     </div>
   </div>

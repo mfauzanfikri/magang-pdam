@@ -12,6 +12,8 @@ $routes->get('/logout', 'AuthController::logout');
 
 $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('/dashboard', 'DashboardController::index');
+    $routes->get('/profile', 'ProfileController::index');
+    $routes->post('/change-password', 'AuthController::changePassword');
     
     $routes->group('masters', function(RouteCollection $routes) {
         $routes->group('users', function(RouteCollection $routes) {

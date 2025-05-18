@@ -54,6 +54,14 @@ class AuthUser
     }
     
     /**
+     * Get email
+     */
+    public static function email(): ?string
+    {
+        return self::get('email');
+    }
+    
+    /**
      * Log out the current user
      */
     public static function logout(): void
