@@ -36,6 +36,8 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     
     $routes->group('attendance', function(RouteCollection $routes) {
         $routes->get('', 'AttendanceController::index');
+        $routes->post('check-in', 'AttendanceController::checkIn');
+        $routes->post('check-out', 'AttendanceController::checkOut');
         $routes->post('(:num)/verification', 'AttendanceController::verification/$1');
     });
     

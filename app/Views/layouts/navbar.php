@@ -220,7 +220,7 @@ use App\Libraries\AuthUser;
                 </div>
             </div>
             <div class="nav-item dropdown">
-                <a class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown" aria-label="Open user menu">
+                <a class="nav-link d-flex lh-1 p-0 px-2 cursor-pointer" data-bs-toggle="dropdown" aria-label="Open user menu">
                     <div class="d-none d-xl-block ps-2">
                         <div><?= AuthUser::name() ?></div>
                         <div class="mt-1 small text-secondary"><?= AuthUser::role() ?></div>

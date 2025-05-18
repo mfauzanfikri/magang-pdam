@@ -3,17 +3,23 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\AuthUser;
 use App\Models\AttendanceModel;
+use App\Models\ProposalModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
+use DateTime;
+use DateTimeZone;
 
 class AttendanceController extends BaseController
 {
     private $attendanceModel;
+    private ProposalModel $proposalModel;
     
     public function __construct()
     {
         $this->attendanceModel = new AttendanceModel();
+        $this->proposalModel = new ProposalModel();
     }
     
     public function index()
@@ -27,7 +33,7 @@ class AttendanceController extends BaseController
             'rejected' => [],
         ];
         
-        foreach ($attendance as $at) {
+        foreach($attendance as $at) {
             $status = $at['status'];
             $attendanceByStatus[$status][] = $at;
         }
@@ -53,7 +59,7 @@ class AttendanceController extends BaseController
             'notes' => 'string'
         ];
         
-        if (!$this->validate($validationRules)) {
+        if(!$this->validate($validationRules)) {
             return redirect()->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
@@ -66,5 +72,104 @@ class AttendanceController extends BaseController
         ]);
         
         return redirect()->back()->with('message', 'Attendance has been ' . $verification . '.');
+    }
+    
+    public function checkIn()
+    {
+        $userId = AuthUser::id();
+        
+        $timezone = new DateTimeZone('Asia/Jakarta');
+        $now = new DateTime('now', $timezone);
+        
+        $today = $now->format('Y-m-d');
+        $time = $now->format('H:i:s');
+        
+        $proposal = $this->proposalModel
+            ->groupStart()
+            ->where('leader_id', $userId)
+            ->orWhereIn('id', function($builder) use ($userId) {
+                return $builder->select('proposal_id')
+                    ->from('proposal_members')
+                    ->where('user_id', $userId);
+            })
+            ->groupEnd()
+            ->orderBy('id', 'desc')
+            ->first();
+        
+        if(!$proposal) {
+            throw new PageNotFoundException('Proposal not found.');
+        }
+        
+        $attendanceToday = $this->attendanceModel
+            ->where('proposal_id', $proposal['id'])
+            ->where('user_id', $userId)
+            ->where('date', $today)
+            ->first();
+        
+        if(!$attendanceToday) {
+            $this->attendanceModel->insert([
+                'user_id' => $userId,
+                'proposal_id' => $proposal['id'],
+                'date' => $today,
+                'check_in' => $time,
+            ]);
+        } else {
+            $this->attendanceModel
+                ->set(['check_in' => $time])
+                ->where('id', $attendanceToday['id'])
+                ->update();
+            
+        }
+        
+        return redirect()->back()->with('message', 'Check-in was successful.');
+    }
+    
+    public function checkOut()
+    {
+        $userId = AuthUser::id();
+        
+        $timezone = new DateTimeZone('Asia/Jakarta');
+        $now = new DateTime('now', $timezone);
+        
+        $today = $now->format('Y-m-d');
+        $time = $now->format('H:i:s');
+        
+        $proposal = $this->proposalModel
+            ->groupStart()
+            ->where('leader_id', $userId)
+            ->orWhereIn('id', function($builder) use ($userId) {
+                return $builder->select('proposal_id')
+                    ->from('proposal_members')
+                    ->where('user_id', $userId);
+            })
+            ->groupEnd()
+            ->orderBy('id', 'desc')
+            ->first();
+        
+        if(!$proposal) {
+            throw new PageNotFoundException('Proposal not found.');
+        }
+        
+        $attendanceToday = $this->attendanceModel
+            ->where('proposal_id', $proposal['id'])
+            ->where('user_id', $userId)
+            ->where('date', $today)
+            ->first();
+        
+        if(!$attendanceToday) {
+            $this->attendanceModel->insert([
+                'user_id' => $userId,
+                'proposal_id' => $proposal['id'],
+                'date' => $today,
+                'check_out' => $time,
+            ]);
+        } else {
+            $this->attendanceModel
+                ->set(['check_out' => $time])
+                ->where('id', $attendanceToday['id'])
+                ->update();
+        }
+        
+        return redirect()->back()->with('message', 'Check-out was successful.');
     }
 }

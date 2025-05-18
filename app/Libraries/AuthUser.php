@@ -60,4 +60,24 @@ class AuthUser
     {
         session()->destroy();
     }
+    
+    public static function isAdmin(): bool
+    {
+        return self::get('role') === 'admin';
+    }
+    
+    public static function isIntern(): bool
+    {
+        return self::get('role') === 'intern';
+    }
+    
+    public static function isCandidate(): bool
+    {
+        return self::get('role') === 'candidate';
+    }
+    
+    public static function isGraduate(): bool
+    {
+        return self::get('role') === 'graduate';
+    }
 }
