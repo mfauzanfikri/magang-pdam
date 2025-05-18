@@ -1,4 +1,7 @@
 <?php
+
+use App\Libraries\Authz;
+
 helper('string');
 $uri = service('uri');
 $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
@@ -1007,77 +1010,81 @@ $currentPath = $uri->getPath(); // e.g. 'dashboard/users'
             <span class="nav-link-title"> Final Reports </span>
           </a>
         </li>
-        <!-- attendance -->
-        <li class="nav-item <?= str_contains($currentPath, 'attendance') ? 'active' : '' ?>">
-          <a class="nav-link" href="<?= base_url('/attendance') ?>">
-            <span class="nav-link-icon d-md-none d-lg-inline-block">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                   class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-plus">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5" />
-                <path d="M16 3v4" />
-                <path d="M8 3v4" />
-                <path d="M4 11h16" />
-                <path d="M16 19h6" />
-                <path d="M19 16v6" />
-              </svg>
-            </span>
-            <span class="nav-link-title"> Attendance </span>
-          </a>
-        </li>
-        <!-- activities -->
-        <li class="nav-item <?= str_contains($currentPath, 'activities') ? 'active' : '' ?>">
-          <a class="nav-link" href="<?= base_url('/activities') ?>">
-            <span class="nav-link-icon d-md-none d-lg-inline-block">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                   class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
-                <path d="M16 3l0 4" />
-                <path d="M8 3l0 4" />
-                <path d="M4 11l16 0" />
-                <path d="M8 15h2v2h-2z" />
-              </svg>
-            </span>
-            <span class="nav-link-title"> Activities </span>
-          </a>
-        </li>
-        <!-- masters -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle <?= str_contains_any($currentPath, ['users']) ? 'show' : '' ?>"
-            href="#navbar-base"
-            data-bs-toggle="dropdown"
-            data-bs-auto-close="false"
-            role="button"
-            aria-expanded="<?= str_contains_any($currentPath, ['users']) ? 'true' : 'false' ?>"
-          >
-            <span class="nav-link-icon d-md-none d-lg-inline-block"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                   class="icon icon-tabler icons-tabler-outline icon-tabler-files">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M15 3v4a1 1 0 0 0 1 1h4" />
-                <path d="M18 17h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h4l5 5v7a2 2 0 0 1 -2 2z" />
-                <path d="M16 17v2a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h2" />
-              </svg>
-            </span>
-            <span class="nav-link-title"> Masters </span>
-          </a>
-          <div class="dropdown-menu <?= str_contains_any($currentPath, ['users']) ? 'show' : '' ?>">
-            <div class="dropdown-menu-columns">
-              <div class="dropdown-menu-column">
-                <a class="dropdown-item <?= str_contains($currentPath, 'users') ? 'active' : '' ?>"
-                   href="<?= base_url('/masters/users') ?>">
-                  Users
-                </a>
+          <?php if(!Authz::any(['admin', 'supervisor'])): ?>
+            <!-- attendance -->
+            <li class="nav-item <?= str_contains($currentPath, 'attendance') ? 'active' : '' ?>">
+              <a class="nav-link" href="<?= base_url('/attendance') ?>">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                       class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-plus">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5" />
+                    <path d="M16 3v4" />
+                    <path d="M8 3v4" />
+                    <path d="M4 11h16" />
+                    <path d="M16 19h6" />
+                    <path d="M19 16v6" />
+                  </svg>
+                </span>
+                <span class="nav-link-title"> Attendance </span>
+              </a>
+            </li>
+            <!-- activities -->
+            <li class="nav-item <?= str_contains($currentPath, 'activities') ? 'active' : '' ?>">
+              <a class="nav-link" href="<?= base_url('/activities') ?>">
+                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                       class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+                    <path d="M16 3l0 4" />
+                    <path d="M8 3l0 4" />
+                    <path d="M4 11l16 0" />
+                    <path d="M8 15h2v2h-2z" />
+                  </svg>
+                </span>
+                <span class="nav-link-title"> Activities </span>
+              </a>
+            </li>
+          <?php endif ?>
+          <?php if(Authz::is('admin')): ?>
+            <!-- masters -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle <?= str_contains_any($currentPath, ['users']) ? 'show' : '' ?>"
+                href="#navbar-base"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="false"
+                role="button"
+                aria-expanded="<?= str_contains_any($currentPath, ['users']) ? 'true' : 'false' ?>"
+              >
+                <span class="nav-link-icon d-md-none d-lg-inline-block"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                       class="icon icon-tabler icons-tabler-outline icon-tabler-files">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M15 3v4a1 1 0 0 0 1 1h4" />
+                    <path d="M18 17h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h4l5 5v7a2 2 0 0 1 -2 2z" />
+                    <path d="M16 17v2a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h2" />
+                  </svg>
+                </span>
+                <span class="nav-link-title"> Masters </span>
+              </a>
+              <div class="dropdown-menu <?= str_contains_any($currentPath, ['users']) ? 'show' : '' ?>">
+                <div class="dropdown-menu-columns">
+                  <div class="dropdown-menu-column">
+                    <a class="dropdown-item <?= str_contains($currentPath, 'users') ? 'active' : '' ?>"
+                       href="<?= base_url('/masters/users') ?>">
+                      Users
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </li>
+            </li>
+          <?php endif ?>
         <hr class="my-3" />
         <li class="nav-item">
           <p class="nav-link mb-0">Settings</p>

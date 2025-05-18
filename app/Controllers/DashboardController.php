@@ -59,13 +59,16 @@ class DashboardController extends BaseController
         $events = [];
         
         if(Authz::any(['intern'])) {
-            if($proposal) {
+            if ($proposal) {
                 $finalReport = $this->finalReportModel->where('proposal_id', $proposal['id'])->first();
             }
             
             $activityCount = $this->activityModel->where('user_id', $userId)->countAllResults();
             
-            $attendanceToday = $this->attendanceModel->where('user_id', $userId)->where('date', $today)->first();
+            $attendanceToday = $this->attendanceModel
+                ->where('user_id', $userId)
+                ->where('date', $today)
+                ->first();
             
             $attendanceMonth = $this->attendanceModel
                 ->where('user_id', $userId)
@@ -73,8 +76,8 @@ class DashboardController extends BaseController
                 ->where('YEAR(date)', $now->format('Y'))
                 ->findAll();
             
-            foreach($attendanceMonth as $att) {
-                if($att['check_in']) {
+            foreach ($attendanceMonth as $att) {
+                if ($att['check_in']) {
                     $events[] = [
                         'title' => 'Check In',
                         'start' => $att['date'] . 'T' . $att['check_in'],
@@ -82,11 +85,30 @@ class DashboardController extends BaseController
                     ];
                 }
                 
-                if($att['check_out']) {
+                if ($att['check_out']) {
                     $events[] = [
                         'title' => 'Check Out',
                         'start' => $att['date'] . 'T' . $att['check_out'],
                         'allDay' => false,
+                    ];
+                }
+            }
+            
+            // === Add activities to events ===
+            if ($proposal) {
+                $activities = $this->activityModel
+                    ->where('user_id', $userId)
+                    ->where('proposal_id', $proposal['id'])
+                    ->where('MONTH(start_date)', $thisMonth)
+                    ->where('YEAR(start_date)', $thisYear)
+                    ->findAll();
+                
+                foreach ($activities as $activity) {
+                    $events[] = [
+                        'title' => 'Activity: ' . $activity['title'],
+                        'start' => $activity['start_date'],
+                        'end' => $activity['end_date'],
+                        'allDay' => true,
                     ];
                 }
             }

@@ -3,6 +3,7 @@
 namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
+use DateTime;
 use Faker\Factory;
 use Ramsey\Uuid\Uuid;
 
@@ -238,11 +239,33 @@ class DatabaseSeeder extends Seeder
     private function seedActivities()
     {
         $faker = Factory::create();
-        $users = $this->db->table('users')->whereIn('role', ['intern', 'graduate'])->get()->getResultArray();
         $destinationDir = WRITEPATH . 'uploads/activities/';
         $data = [];
         
+        // Get intern and graduate users
+        $users = $this->db->table('users')
+            ->whereIn('role', ['intern', 'graduate'])
+            ->get()->getResultArray();
+        
         foreach ($users as $user) {
+            // Get user's approved proposal (as leader or member)
+            $proposal = $this->db->table('proposals')
+                ->where('status', 'approved')
+                ->groupStart()
+                ->where('leader_id', $user['id'])
+                ->orWhereIn('id', function ($builder) use ($user) {
+                    return $builder->select('proposal_id')
+                        ->from('proposal_members')
+                        ->where('user_id', $user['id']);
+                })
+                ->groupEnd()
+                ->orderBy('id', 'desc')
+                ->get()->getFirstRow();
+            
+            // Skip if no proposal
+            if (!$proposal) continue;
+            
+            // Generate 3–5 activities per user
             for ($i = 0; $i < rand(3, 5); $i++) {
                 $start = $faker->dateTimeBetween('-1 month', 'now');
                 $end = (clone $start)->modify('+' . rand(0, 2) . ' days');
@@ -251,6 +274,7 @@ class DatabaseSeeder extends Seeder
                 
                 $data[] = [
                     'user_id' => $user['id'],
+                    'proposal_id' => $proposal->id,
                     'title' => $faker->sentence(4),
                     'description' => $faker->paragraph(2),
                     'photo_path' => str_replace(WRITEPATH, '', $filePath),
@@ -287,25 +311,44 @@ class DatabaseSeeder extends Seeder
         $data = [];
         
         foreach ($proposals as $proposal) {
-            $userIds = $proposal['is_group'] ? array_merge([$proposal['leader_id']], $proposalMembers[$proposal['id']] ?? []) : [$proposal['leader_id']];
+            $userIds = $proposal['is_group']
+                ? array_merge([$proposal['leader_id']], $proposalMembers[$proposal['id']] ?? [])
+                : [$proposal['leader_id']];
             
             foreach (array_unique($userIds) as $userId) {
+                $user = $this->db->table('users')->where('id', $userId)->get()->getRowArray();
+                
+                // Only interns and graduates
+                if (!in_array($user['role'], ['intern', 'graduate'])) {
+                    continue;
+                }
+                
                 if (in_array($userId, $usedUserIds)) continue;
                 $usedUserIds[] = $userId;
                 
-                for ($i = 0; $i < rand(5, 10); $i++) {
-                    $checkIn = $faker->dateTimeBetween('-3 weeks', 'now');
-                    $checkOut = (clone $checkIn)->modify('+' . rand(4, 8) . ' hours');
+                // Random date range: last 10 working days (Monday–Friday)
+                $dates = [];
+                $startDate = (new DateTime('-14 days'))->modify('next Monday');
+                while (count($dates) < 10) {
+                    if (!in_array($startDate->format('N'), ['6', '7'])) {
+                        $dates[] = clone $startDate;
+                    }
+                    $startDate->modify('+1 day');
+                }
+                
+                foreach ($dates as $day) {
+                    $checkIn = $day->setTime(rand(8, 8), rand(0, 59), 0);
+                    $checkOut = (clone $day)->setTime(rand(16, 16), rand(0, 59), 0);
+                    
                     $status = $faker->randomElement(['verified', 'unverified', 'rejected']);
-                    $user = $this->db->table('users')->where('id', $userId)->get()->getRowArray();
-                    if ($user && $user['role'] === 'graduate') {
+                    if ($user['role'] === 'graduate') {
                         $status = 'verified';
                     }
                     
                     $data[] = [
                         'proposal_id' => $proposal['id'],
                         'user_id' => $userId,
-                        'date' => $checkIn->format('Y-m-d'),
+                        'date' => $day->format('Y-m-d'),
                         'check_in' => $checkIn->format('H:i:s'),
                         'check_out' => $checkOut->format('H:i:s'),
                         'status' => $status,

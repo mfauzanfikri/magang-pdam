@@ -4,7 +4,9 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\AuthUser;
+use App\Libraries\Authz;
 use App\Models\ActivityModel;
+use App\Models\ProposalModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 use Ramsey\Uuid\Uuid;
@@ -12,15 +14,24 @@ use Ramsey\Uuid\Uuid;
 class ActivitiesController extends BaseController
 {
     private ActivityModel $activitiesModel;
+    private ProposalModel $proposalModel;
     
     public function __construct()
     {
         $this->activitiesModel = new ActivityModel();
+        $this->proposalModel = new ProposalModel();
     }
     
     public function index()
     {
-        $raw = $this->activitiesModel->withUser()->orderBy('id', 'desc')->findAll();
+        $query = $this->activitiesModel->withUser()->orderBy('id', 'desc');
+        
+        if(Authz::is('intern')) {
+            $proposal = $this->proposalModel->belongsToUser(AuthUser::id())->active()->first();
+            $query->where('user_id', AuthUser::id())->where('proposal_id', $proposal['id']);
+        }
+        
+        $raw = $query->findAll();
         $activities = $this->activitiesModel->processJsonFields($raw);
         
         $data = [
@@ -72,7 +83,7 @@ class ActivitiesController extends BaseController
         
         $file = $this->request->getFile('photo_file');
         $photoPath = '';
-        if ($file->isValid() && !$file->hasMoved()) {
+        if($file->isValid() && !$file->hasMoved()) {
             $newName = Uuid::uuid4()->toString();
             $file->move(WRITEPATH . 'uploads/activities', $newName);
             
@@ -100,7 +111,7 @@ class ActivitiesController extends BaseController
         $file = $this->request->getFile('photo_file');
         
         // Only apply file rules if file was uploaded
-        if ($file && $file->isValid() && !$file->hasMoved()) {
+        if($file && $file->isValid() && !$file->hasMoved()) {
             $rules['photo_file'] = [
                 'label' => 'Photo',
                 'rules' => 'is_image[photo_file]'
@@ -109,14 +120,14 @@ class ActivitiesController extends BaseController
             ];
         }
         
-        if (!$this->validate($rules)) {
+        if(!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
         
         $validated = $this->validator->getValidated();
         
         // Handle optional new image upload
-        if ($file && $file->isValid() && !$file->hasMoved()) {
+        if($file && $file->isValid() && !$file->hasMoved()) {
             $newName = Uuid::uuid4()->toString();
             $file->move(WRITEPATH . 'uploads/activities', $newName);
             $validated['photo_path'] = 'uploads/activities/' . $newName;

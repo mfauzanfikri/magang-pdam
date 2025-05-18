@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\AuthUser;
+use App\Libraries\Authz;
 use App\Models\AttendanceModel;
 use App\Models\ProposalModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -24,7 +25,14 @@ class AttendanceController extends BaseController
     
     public function index()
     {
-        $raw = $this->attendanceModel->withRelations()->orderBy('date', 'desc')->findAll();
+        $query = $this->attendanceModel->withRelations()->orderBy('date', 'desc');
+        
+        if(Authz::is('intern')) {
+            $proposal = $this->proposalModel->belongsToUser(AuthUser::id())->active()->first();
+            $query->where('user_id', AuthUser::id())->where('proposal_id', $proposal['id']);
+        }
+        
+        $raw = $query->findAll();
         $attendance = $this->attendanceModel->processJsonFields($raw);
         
         $attendanceByStatus = [
@@ -118,7 +126,6 @@ class AttendanceController extends BaseController
                 ->set(['check_in' => $time])
                 ->where('id', $attendanceToday['id'])
                 ->update();
-            
         }
         
         return redirect()->back()->with('message', 'Check-in was successful.');

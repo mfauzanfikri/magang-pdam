@@ -1,4 +1,6 @@
-<?php helper('row_data') ?>
+<?php use App\Libraries\Authz;
+
+helper('row_data') ?>
 
 <?= $this->extend('layouts/app') ?>
 
@@ -48,7 +50,9 @@
               <th>Date</th>
               <th>Check In</th>
               <th>Check Out</th>
-              <th>Actions</th>
+                <?php if(Authz::any(['admin', 'supervisor'])): ?>
+                  <th>Actions</th>
+                <?php endif ?>
             </tr>
             </thead>
             <tbody>
@@ -58,13 +62,16 @@
                 <td><?= $attendance['date'] ?></td>
                 <td><?= $attendance['check_in'] ?></td>
                 <td><?= $attendance['check_out'] ?></td>
-                <td>
-                  <button class="btn-verification btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-                          data-bs-target="#modal-attendance-verification"
-                          data-row="<?= encode_row_data($attendance) ?>">
-                    Verification
-                  </button>
-                </td>
+                  <?php if(Authz::any(['admin', 'supervisor'])): ?>
+                    <td>
+                      <button class="btn-verification btn btn-warning btn-5 d-none d-sm-inline-block"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modal-attendance-verification"
+                              data-row="<?= encode_row_data($attendance) ?>">
+                        Verification
+                      </button>
+                    </td>
+                  <?php endif ?>
               </tr>
             <?php endforeach; ?>
             </tbody>
@@ -128,7 +135,9 @@
     
     <?= $this->section('modals') ?>
     
-    <?= $this->include('pages/attendance/verification-modal') ?>
+    <?php if(Authz::any(['admin', 'supervisor'])): ?>
+        <?= $this->include('pages/attendance/verification-modal') ?>
+    <?php endif ?>
     
     <?= $this->endSection() ?>
     

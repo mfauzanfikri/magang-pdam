@@ -1,4 +1,6 @@
-<?php helper('row_data') ?>
+<?php use App\Libraries\Authz;
+
+helper('row_data') ?>
 
 <?= $this->extend('layouts/app') ?>
 
@@ -6,51 +8,53 @@
 <link rel="stylesheet" href="/assets/libs/datatables/datatables.css">
 <?= $this->endSection() ?>
 
-<?= $this->section('title-actions') ?>
-<button class="btn btn-primary btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-        data-bs-target="#modal-add-activity">
-  <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="icon icon-2"
+<?php if(Authz::is('intern')): ?>
+    <?= $this->section('title-actions') ?>
+  <button class="btn btn-primary btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
+          data-bs-target="#modal-add-activity">
+    <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="icon icon-2"
+    >
+      <path d="M12 5l0 14" />
+      <path d="M5 12l14 0" />
+    </svg>
+    Create new activity
+  </button>
+  <button
+    class="btn btn-primary btn-6 d-sm-none btn-icon"
+    data-bs-toggle="modal"
+    data-bs-target="#modal-add-activity"
+    aria-label="Create new activity"
   >
-    <path d="M12 5l0 14" />
-    <path d="M5 12l14 0" />
-  </svg>
-  Create new activity
-</button>
-<button
-  class="btn btn-primary btn-6 d-sm-none btn-icon"
-  data-bs-toggle="modal"
-  data-bs-target="#modal-add-activity"
-  aria-label="Create new activity"
->
-  <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="icon icon-2"
-  >
-    <path d="M12 5l0 14" />
-    <path d="M5 12l14 0" />
-  </svg>
-</button>
-<?= $this->endSection() ?>
+    <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="icon icon-2"
+    >
+      <path d="M12 5l0 14" />
+      <path d="M5 12l14 0" />
+    </svg>
+  </button>
+    <?= $this->endSection() ?>
+<?php endif ?>
 
 <?= $this->section('content') ?>
 
@@ -140,7 +144,7 @@
       const activity = decodeRowData($(this).data('row'));
       console.log(activity);
       editModal.find('form').attr('action', `/activities/${activity.id}`);
-      
+
       editModal.find('input[name=title]').val(activity.title);
       editModal.find('textarea[name=description]').html(activity.description);
       editModal.find('input[name=start_date]').val(activity.start_date);
