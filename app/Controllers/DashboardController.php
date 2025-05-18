@@ -3,12 +3,14 @@
 namespace App\Controllers;
 
 use App\Libraries\AuthUser;
+use App\Libraries\Authz;
 use App\Models\ActivityModel;
 use App\Models\AttendanceModel;
 use App\Models\FinalReportModel;
 use App\Models\ProposalModel;
 use DateTime;
 use DateTimeZone;
+use function PHPUnit\Framework\any;
 
 class DashboardController extends BaseController
 {
@@ -37,7 +39,7 @@ class DashboardController extends BaseController
         $thisYear = $now->format('Y');
         
         $proposal = null;
-        if(AuthUser::isIntern() || AuthUser::isCandidate()) {
+        if(Authz::any(['intern', 'candaidate'])) {
             $proposal = $this->proposalModel
                 ->groupStart()
                 ->where('leader_id', $userId)
@@ -56,7 +58,7 @@ class DashboardController extends BaseController
         $attendanceToday = null;
         $events = [];
         
-        if(AuthUser::isIntern()) {
+        if(Authz::any(['intern'])) {
             if($proposal) {
                 $finalReport = $this->finalReportModel->where('proposal_id', $proposal['id'])->first();
             }
@@ -103,7 +105,7 @@ class DashboardController extends BaseController
         
         $labelsMonths = null;
         
-        if(AuthUser::isAdmin()) {
+        if(Authz::any(['admin', 'supervisor'])) {
             $proposalsThisYearPerMonthCount = [
                 'pending' => array_fill(0, 12, 0),
                 'approved' => array_fill(0, 12, 0),
@@ -198,8 +200,6 @@ class DashboardController extends BaseController
             'finalReportsThisYearPerMonthCount' => $finalReportsThisYearPerMonthCount,
             'labelsMonths' => $labelsMonths,
         ];
-        
-        // dd($data);
         
         return view('pages/dashboard', $data);
     }

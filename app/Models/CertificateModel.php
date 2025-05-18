@@ -9,7 +9,7 @@ class CertificateModel extends Model
     protected $table            = 'certificates';
     protected $primaryKey       = 'id';
     protected $allowedFields    = [
-        'user_id', 'proposal_id', 'file_path',
+        'user_id', 'final_report_id', 'file_path',
         'created_at', 'updated_at'
     ];
     protected $useTimestamps    = true;

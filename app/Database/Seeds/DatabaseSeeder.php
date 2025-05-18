@@ -106,6 +106,8 @@ class DatabaseSeeder extends Seeder
             $proposalId = $this->db->insertID();
             
             foreach ($members as $member) {
+                if ($member['id'] === $leader['id']) continue;
+                
                 $proposalMembers[] = [
                     'proposal_id' => $proposalId,
                     'user_id' => $member['id'],
@@ -327,6 +329,7 @@ class DatabaseSeeder extends Seeder
         $data = [];
         
         foreach ($graduates as $user) {
+            // Find user's proposal
             $proposal = $this->db->table('proposals')
                 ->select('id')->where('leader_id', $user['id'])->get()->getFirstRow();
             
@@ -339,11 +342,22 @@ class DatabaseSeeder extends Seeder
             
             if (!$proposal) continue;
             
+            // Find approved final report for the proposal
+            $finalReport = $this->db->table('final_reports')
+                ->select('id')
+                ->where('proposal_id', $proposal->id)
+                ->where('status', 'approved')
+                ->get()
+                ->getFirstRow();
+            
+            if (!$finalReport) continue;
+            
+            // Generate file
             $filePath = $destinationDir . Uuid::uuid4()->toString() . '.pdf';
             copy(WRITEPATH . 'uploads/test.pdf', $filePath);
             
             $data[] = [
-                'proposal_id' => $proposal->id,
+                'final_report_id' => $finalReport->id, // updated foreign key
                 'user_id' => $user['id'],
                 'file_path' => str_replace(WRITEPATH, '', $filePath),
                 'created_at' => date('Y-m-d H:i:s'),

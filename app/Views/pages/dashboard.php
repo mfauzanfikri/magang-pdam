@@ -1,6 +1,7 @@
 <?php
 
 use App\Libraries\AuthUser;
+use App\Libraries\Authz;
 
 ?>
 <?= $this->extend('layouts/app') ?>
@@ -9,7 +10,7 @@ use App\Libraries\AuthUser;
 <?= $this->include('components/success-alert') ?>
 
 <div class="row">
-    <?php if(AuthUser::isIntern()): ?>
+    <?php if(Authz::is('intern')): ?>
       <div class="col-12">
         <div class="row">
           <div class="col-4">
@@ -146,7 +147,7 @@ use App\Libraries\AuthUser;
       </div>
     <?php endif ?>
     
-    <?php if(AuthUser::isCandidate()): ?>
+    <?php if(Authz::any(['candidate', 'graduate'])): ?>
       <div class="col-12">
         <div class="row">
           <div class="col-6">
@@ -189,7 +190,7 @@ use App\Libraries\AuthUser;
       </div>
     <?php endif ?>
   
-  <?php if(AuthUser::isAdmin()): ?>
+  <?php if(Authz::any(['admin', 'supervisor'])): ?>
     <div class="col-12">
       <div class="row">
         <div class="col-4">
@@ -340,7 +341,7 @@ use App\Libraries\AuthUser;
 
 <?= $this->section('page-js') ?>
 <script>
-    <?php if(AuthUser::isIntern()): ?>
+    <?php if(Authz::is('intern')): ?>
     const calendarEl = $('#calendar');
     const calendar = new FullCalendar.Calendar(calendarEl[0], {
       initialView: 'dayGridMonth',
@@ -360,7 +361,7 @@ use App\Libraries\AuthUser;
     calendar.render();
     <?php endif ?>
     
-    <?php if(AuthUser::isAdmin()): ?>
+    <?php if(Authz::any(['admin', 'supervisor'])): ?>
     // proposals chart
     new ApexCharts($('#chart-proposals-this-month')[0], {
       chart: {

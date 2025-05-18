@@ -7,12 +7,12 @@
       </div>
       <div class="modal-body">
         <table id="final-report-details-table" class="table table-striped">
-          <tbody>
           <thead>
           <tr>
             <th colspan="2"></th>
           </tr>
           </thead>
+          <tbody>
           <tr>
             <td>Title</td>
             <td></td>

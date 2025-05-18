@@ -12,7 +12,7 @@ class CreateCertificatesTable extends Migration
         $this->forge->addField([
             'id'            => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
             'user_id'       => ['type' => 'INT', 'unsigned' => true],
-            'proposal_id'   => ['type' => 'INT', 'unsigned' => true],
+            'final_report_id'   => ['type' => 'INT', 'unsigned' => true],
             'file_path'     => ['type' => 'VARCHAR', 'constraint' => 255],
             'created_at' => [
                 'type'    => 'DATETIME',
@@ -28,7 +28,7 @@ class CreateCertificatesTable extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('proposal_id', 'proposals', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('final_report_id', 'final_reports', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('certificates');
     }
     

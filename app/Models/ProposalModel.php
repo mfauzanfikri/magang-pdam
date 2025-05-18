@@ -49,4 +49,25 @@ class ProposalModel extends Model
         }
         return $rows;
     }
+    
+    public function belongsToUser(int $userId): self
+    {
+        return $this->groupStart()
+            ->where('leader_id', $userId)
+            ->orWhereIn('proposals.id', function($builder) use ($userId) {
+                return $builder->select('proposal_id')
+                    ->from('proposal_members')
+                    ->where('user_id', $userId);
+            })
+            ->groupEnd();
+    }
+    
+    public function active()
+    {
+        return $this->whereNotIn('proposals.id', function($builder) {
+            return $builder->select('proposal_id')
+                ->from('final_reports')
+                ->whereIn('status', ['approved']);
+        });
+    }
 }
