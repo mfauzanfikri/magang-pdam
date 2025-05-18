@@ -122,11 +122,11 @@ use App\Libraries\AuthUser;
                   </div>
                   <div class="col">
                     <div>Attendance</div>
-                      <?php if(!$attendanceToday['check_in']): ?>
+                      <?php if(!$attendanceToday || !$attendanceToday['check_in']): ?>
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#modal-check-in">Check In
                         </button>
-                      <?php elseif(!$attendanceToday['check_out']): ?>
+                      <?php elseif($attendanceToday && !$attendanceToday['check_out']): ?>
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#modal-check-out">Check Out
                         </button>
