@@ -18,7 +18,41 @@ class AuthController extends BaseController
     
     public function index()
     {
-        return view('pages/auth/login');
+        return view('pages/auth/login', ['title' => 'Login']);
+    }
+    
+    public function showRegister()
+    {
+        if(AuthUser::user()) {
+            return redirect()->to('/login');
+        }
+        
+        return view('pages/auth/register', ['title' => 'Register']);
+    }
+    
+    public function register()
+    {
+        helper(['form']);
+        
+        $rules = [
+            'name' => 'required|min_length[3]|max_length[100]',
+            'email' => 'required|valid_email|is_unique[users.email]',
+            'password' => 'required|min_length[6]',
+        ];
+        
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+        
+        $this->userModel->insert([
+            'name' => $this->request->getPost('name'),
+            'email' => $this->request->getPost('email'),
+            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role' => 'candidate',
+            'status' => 'active',
+        ]);
+        
+        return redirect()->to('/login')->with('message', 'Registration successful. Please log in.');
     }
     
     public function attemptLogin()

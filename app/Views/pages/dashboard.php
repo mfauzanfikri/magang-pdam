@@ -156,7 +156,7 @@ use App\Libraries\Authz;
                 <div class="row align-items-center">
                   <div class="col">
                     <h2 class="fw-bold text-md">Welcome to Magang PDAM</h2>
-                    <div class="text-secondary">Please wait, your proposal is still under review.</div>
+                    <div class="text-secondary"><?= isset($proposal['status']) ? 'Please wait, your proposal is still under review.' : 'Please propose a proposal to apply for internship.' ?></div>
                   </div>
                 </div>
               </div>

@@ -1,16 +1,22 @@
 <?= $this->extend('layouts/auth') ?>
 
 <?= $this->section('content') ?>
-<form class="card" style="width: 36rem" action="<?= base_url('/login') ?>" method="post">
+<form class="card" style="width: 36rem" action="<?= base_url('/register') ?>" method="post">
   <div class="card-header">
     <h1 class="card-title">Magang PDAM</h1>
   </div>
   <div class="card-body">
-      <?= $this->include('components/success-alert') ?>
       <?= $this->include('components/error-alert') ?>
     
     <div class="mb-3">
-      <p>Please log in to access the system.</p>
+      <p>Register to apply for internship.</p>
+    </div>
+    <div class="mb-3">
+      <label class="form-label required" for="login-name">Name</label>
+      <div>
+        <input id="login-name" name="name" type="text" class="form-control" aria-describedby="nameHelp"
+               placeholder="Enter name" autocomplete="off" required />
+      </div>
     </div>
     <div class="mb-3">
       <label class="form-label required" for="login-email">Email address</label>
@@ -28,7 +34,7 @@
     </div>
   </div>
   <div class="card-footer text-end">
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-primary">Register</button>
   </div>
 </form>
 <?= $this->endSection() ?>

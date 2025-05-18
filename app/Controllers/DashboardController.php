@@ -39,7 +39,7 @@ class DashboardController extends BaseController
         $thisYear = $now->format('Y');
         
         $proposal = null;
-        if(Authz::any(['intern', 'candaidate'])) {
+        if(Authz::any(['intern', 'candidate'])) {
             $proposal = $this->proposalModel
                 ->groupStart()
                 ->where('leader_id', $userId)
