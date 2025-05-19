@@ -18,34 +18,36 @@ class FinalReportModel extends Model
     {
         $proposalAlias = 'p';
         
-        $membersSubquery = "(SELECT JSON_ARRAYAGG(JSON_OBJECT(
+        $membersSubquery = "(SELECT CONCAT('[', GROUP_CONCAT(
+        JSON_OBJECT(
             'id', u.id,
             'name', u.name,
             'email', u.email,
             'role', u.role
-        ))
-        FROM proposal_members pm
-        JOIN users u ON u.id = pm.user_id
-        WHERE pm.proposal_id = {$proposalAlias}.id)";
+        )
+    ), ']')
+    FROM proposal_members pm
+    JOIN users u ON u.id = pm.user_id
+    WHERE pm.proposal_id = {$proposalAlias}.id)";
         
         $leaderSelect = "JSON_OBJECT(
-            'id', leader.id,
-            'name', leader.name,
-            'email', leader.email,
-            'role', leader.role
-        ) AS leader";
+        'id', leader.id,
+        'name', leader.name,
+        'email', leader.email,
+        'role', leader.role
+    ) AS leader";
         
         return $this
             ->select("final_reports.*,
-                      {$proposalAlias}.id AS proposal_id,
-                      {$proposalAlias}.title AS proposal_title,
-                      {$proposalAlias}.institution,
-                      {$proposalAlias}.is_group,
-                      {$proposalAlias}.status AS proposal_status,
-                      $leaderSelect,
-                      $membersSubquery AS members", false)
+                  {$proposalAlias}.id AS proposal_id,
+                  {$proposalAlias}.title AS proposal_title,
+                  {$proposalAlias}.institution,
+                  {$proposalAlias}.is_group,
+                  {$proposalAlias}.status AS proposal_status,
+                  $leaderSelect,
+                  $membersSubquery AS members", false)
             ->join("proposals {$proposalAlias}", "{$proposalAlias}.id = final_reports.proposal_id")
-            ->join('users leader', 'leader.id = p.leader_id');
+            ->join('users leader', "leader.id = {$proposalAlias}.leader_id");
     }
     
     public function belongsToUser(int $userId)

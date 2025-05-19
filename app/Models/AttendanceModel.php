@@ -19,49 +19,51 @@ class AttendanceModel extends Model
     {
         // Attendee (always required)
         $userSelect = "JSON_OBJECT(
-            'id', IFNULL(user.id, ''),
-            'name', IFNULL(user.name, ''),
-            'email', IFNULL(user.email, ''),
-            'role', IFNULL(user.role, '')
-        ) AS user";
+        'id', IFNULL(user.id, ''),
+        'name', IFNULL(user.name, ''),
+        'email', IFNULL(user.email, ''),
+        'role', IFNULL(user.role, '')
+    ) AS user";
         
-        // Verifier (nullable, return NULL instead of empty object)
+        // Verifier (nullable)
         $verifierSelect = "IF(attendances.verified_by IS NULL, NULL, JSON_OBJECT(
-            'id', verifier.id,
-            'name', verifier.name,
-            'email', verifier.email,
-            'role', verifier.role
-        )) AS verified_by_user";
+        'id', verifier.id,
+        'name', verifier.name,
+        'email', verifier.email,
+        'role', verifier.role
+    )) AS verified_by_user";
         
-        // Leader (embedded in proposal)
+        // Leader
         $leaderSelect = "JSON_OBJECT(
-            'id', IFNULL(leader.id, ''),
-            'name', IFNULL(leader.name, ''),
-            'email', IFNULL(leader.email, ''),
-            'role', IFNULL(leader.role, '')
-        )";
+        'id', IFNULL(leader.id, ''),
+        'name', IFNULL(leader.name, ''),
+        'email', IFNULL(leader.email, ''),
+        'role', IFNULL(leader.role, '')
+    )";
         
-        // Members (nullable)
-        $membersSubquery = "(SELECT JSON_ARRAYAGG(JSON_OBJECT(
+        // Members (workaround: GROUP_CONCAT)
+        $membersSubquery = "(SELECT CONCAT('[', GROUP_CONCAT(
+        JSON_OBJECT(
             'id', IFNULL(u.id, ''),
             'name', IFNULL(u.name, ''),
             'email', IFNULL(u.email, ''),
             'role', IFNULL(u.role, '')
-        ))
-        FROM proposal_members pm
-        JOIN users u ON u.id = pm.user_id
-        WHERE pm.proposal_id = proposals.id)";
+        )
+    ), ']')
+    FROM proposal_members pm
+    JOIN users u ON u.id = pm.user_id
+    WHERE pm.proposal_id = proposals.id)";
         
-        // Proposal with nested fields
+        // Proposal with embedded leader & members
         $proposalSelect = "JSON_OBJECT(
-            'id', IFNULL(proposals.id, ''),
-            'title', IFNULL(proposals.title, ''),
-            'institution', IFNULL(proposals.institution, ''),
-            'is_group', IFNULL(proposals.is_group, 0),
-            'status', IFNULL(proposals.status, ''),
-            'leader', $leaderSelect,
-            'members', $membersSubquery
-        ) AS proposal";
+        'id', IFNULL(proposals.id, ''),
+        'title', IFNULL(proposals.title, ''),
+        'institution', IFNULL(proposals.institution, ''),
+        'is_group', IFNULL(proposals.is_group, 0),
+        'status', IFNULL(proposals.status, ''),
+        'leader', $leaderSelect,
+        'members', $membersSubquery
+    ) AS proposal";
         
         return $this
             ->select("attendances.*, $userSelect, $verifierSelect, $proposalSelect", false)

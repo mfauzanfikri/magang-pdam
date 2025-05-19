@@ -19,12 +19,14 @@ class ProposalModel extends Model
     
     public function withMembers()
     {
-        $subquery = "(SELECT JSON_ARRAYAGG(JSON_OBJECT(
-                    'id', u.id,
-                    'name', u.name,
-                    'email', u.email,
-                    'role', u.role
-                ))
+        $subquery = "(SELECT CONCAT('[', GROUP_CONCAT(
+                    JSON_OBJECT(
+                        'id', u.id,
+                        'name', u.name,
+                        'email', u.email,
+                        'role', u.role
+                    )
+                ), ']')
                 FROM proposal_members pm
                 JOIN users u ON u.id = pm.user_id
                 WHERE pm.proposal_id = proposals.id)";
@@ -37,7 +39,7 @@ class ProposalModel extends Model
     ) AS leader";
         
         return $this
-            ->select("proposals.*, $leaderSelect, $subquery as members", false)
+            ->select("proposals.*, $leaderSelect, $subquery AS members", false)
             ->join('users leader', 'leader.id = proposals.leader_id');
     }
     
