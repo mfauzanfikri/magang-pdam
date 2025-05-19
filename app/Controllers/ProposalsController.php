@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\AuthUser;
 use App\Libraries\Authz;
+use App\Libraries\Mailer;
 use App\Models\ProposalMemberModel;
 use App\Models\ProposalModel;
 use App\Models\UserModel;
@@ -212,10 +213,60 @@ class ProposalsController extends BaseController
                 $userIds = array_merge($userIds, $memberIds);
             }
             
+            $uniqueUserIds = array_unique($userIds);
+            
             $this->userModel
-                ->whereIn('id', array_unique($userIds))
+                ->whereIn('id', $uniqueUserIds)
                 ->set(['role' => 'intern'])
                 ->update();
+            
+            // === Send notification email ===
+            $mailer = new Mailer();
+            $users = $this->userModel->whereIn('id', $uniqueUserIds)->findAll();
+            
+            foreach ($users as $user) {
+                $mailer->send(
+                    $user['email'],
+                    'Proposal Approved',
+                    'emails/proposal_approved',
+                    [
+                        'name'     => $user['name'],
+                        'proposal' => $proposal['title'],
+                    ]
+                );
+            }
+        }
+        
+        if ($approval === 'rejected') {
+            $userIds = [$proposal['leader_id']];
+            
+            if ($proposal['is_group']) {
+                $members = $this->proposalMemberModel
+                    ->where('proposal_id', $proposal['id'])
+                    ->findAll();
+                
+                $memberIds = array_column($members, 'user_id');
+                $userIds = array_merge($userIds, $memberIds);
+            }
+            
+            $users = $this->userModel
+                ->whereIn('id', array_unique($userIds))
+                ->findAll();
+            
+            $mailer = new \App\Libraries\Mailer();
+            
+            foreach ($users as $user) {
+                $mailer->send(
+                    $user['email'],
+                    'Proposal Magang Ditolak',
+                    'emails/proposal_rejected',
+                    [
+                        'name'     => $user['name'],
+                        'proposal' => $proposal['title'],
+                        'notes'    => $notes,
+                    ]
+                );
+            }
         }
         
         return redirect()->back()->with('message', 'Proposal telah ' . $approval . '.');

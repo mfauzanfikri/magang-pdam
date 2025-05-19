@@ -26,6 +26,10 @@
                required />
       </div>
     </div>
+    
+    <div class="mb-3">
+      <p>Tidak punya akun? <a href="<?= base_url('/register') ?>">Register</a> sekarang!</p>
+    </div>
   </div>
   <div class="card-footer text-end">
     <button type="submit" class="btn btn-primary">Masuk</button>

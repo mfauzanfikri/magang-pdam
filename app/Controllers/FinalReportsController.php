@@ -4,12 +4,14 @@ namespace App\Controllers;
 
 use App\Libraries\AuthUser;
 use App\Libraries\Authz;
+use App\Libraries\Mailer;
 use App\Models\CertificateModel;
 use App\Models\FinalReportModel;
 use App\Models\ProposalMemberModel;
 use App\Models\ProposalModel;
 use App\Models\UserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use Ramsey\Uuid\Uuid;
 
 class FinalReportsController extends BaseController
 {
@@ -146,7 +148,7 @@ class FinalReportsController extends BaseController
         
         $validationRules = [
             'approval' => 'required|in_list[approved,rejected]',
-            'notes' => 'permit_empty|string'
+            'notes'    => 'permit_empty|string',
         ];
         
         if (!$this->validate($validationRules)) {
@@ -156,34 +158,55 @@ class FinalReportsController extends BaseController
         }
         
         $approval = $this->request->getPost('approval');
-        $notes = trim($this->request->getPost('notes') ?? '');
-        $notes = $notes !== '' ? $notes : null;
+        $notes = trim($this->request->getPost('notes') ?? '') ?: null;
         
         $this->finalReportModel->update($id, [
             'status' => $approval,
-            'note' => $notes,
+            'note'   => $notes,
         ]);
         
-        if ($approval === 'approved') {
-            $proposal = $this->proposalModel->where('id', $finalReport['proposal_id'])->first();
+        // Ambil proposal terkait
+        $proposal = $this->proposalModel->where('id', $finalReport['proposal_id'])->first();
+        
+        if ($proposal) {
+            $userIds = [$proposal['leader_id']];
+            $members = $this->proposalMemberModel->where('proposal_id', $proposal['id'])->findAll();
+            $memberIds = array_column($members, 'user_id');
+            $userIds = array_merge($userIds, $memberIds);
+            $userIds = array_unique($userIds);
             
-            if ($proposal) {
-                $userIds = [$proposal['leader_id']];
-                
-                $memberIds = $this->proposalMemberModel
-                    ->where('proposal_id', $proposal['id'])
-                    ->findAll();
-                
-                foreach ($memberIds as $member) {
-                    $userIds[] = $member['user_id'];
-                }
-                
-                $userIds = array_unique($userIds);
-                
+            // Jika disetujui, ubah role jadi graduate
+            if ($approval === 'approved') {
                 $this->userModel
                     ->whereIn('id', $userIds)
                     ->set(['role' => 'graduate'])
                     ->update();
+            }
+            
+            // Kirim email ke semua user terkait
+            $users = $this->userModel->whereIn('id', $userIds)->findAll();
+            $mailer = new Mailer();
+            
+            foreach ($users as $user) {
+                $subject = $approval === 'approved'
+                    ? 'Laporan Akhir Disetujui'
+                    : 'Laporan Akhir Ditolak';
+                
+                $view = $approval === 'approved'
+                    ? 'emails/final_report_approved'
+                    : 'emails/final_report_rejected';
+                
+                $mailer->send(
+                    $user['email'],
+                    $subject,
+                    $view,
+                    [
+                        'name'        => $user['name'],
+                        'proposal'    => $proposal['title'],
+                        'finalReport' => $finalReport['title'],
+                        'notes'       => $notes,
+                    ]
+                );
             }
         }
         
@@ -213,6 +236,7 @@ class FinalReportsController extends BaseController
             $userIds[] = $member['id'];
         }
         
+        // Validasi semua file
         foreach ($userIds as $userId) {
             $fieldName = 'file_' . $userId;
             
@@ -229,21 +253,41 @@ class FinalReportsController extends BaseController
         }
         
         $records = [];
+        $mailer = new Mailer();
+        
         foreach ($userIds as $userId) {
             $fieldName = 'file_' . $userId;
             $file = $this->request->getFile($fieldName);
             
             if ($file->isValid() && !$file->hasMoved()) {
-                $newName = \Ramsey\Uuid\Uuid::uuid4()->toString() . '.pdf';
+                $newName = Uuid::uuid4()->toString() . '.pdf';
                 $file->move(WRITEPATH . 'uploads/certificates', $newName);
+                $filePath = 'uploads/certificates/' . $newName;
                 
                 $records[] = [
                     'final_report_id' => $id,
                     'user_id' => $userId,
-                    'file_path' => 'uploads/certificates/' . $newName,
+                    'file_path' => $filePath,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ];
+                
+                // Kirim email dengan attachment
+                $user = $this->userModel->find($userId);
+                if ($user) {
+                    $mailer->send(
+                        $user['email'],
+                        'Sertifikat Magang Diterbitkan',
+                        'emails/certificate_issued',
+                        [
+                            'name' => $user['name'],
+                            'proposal' => $proposal['title'],
+                        ],
+                        [
+                            'attachments' => [WRITEPATH . $filePath],
+                        ]
+                    );
+                }
             }
         }
         
@@ -251,7 +295,7 @@ class FinalReportsController extends BaseController
             $this->certificateModel->insertBatch($records);
         }
         
-        return redirect()->to('/final-reports')->with('message', 'Sertifikat berhasil diterbitkan.');
+        return redirect()->to('/final-reports')->with('message', 'Sertifikat berhasil diterbitkan dan dikirimkan.');
     }
     
     public function getFile($id)
