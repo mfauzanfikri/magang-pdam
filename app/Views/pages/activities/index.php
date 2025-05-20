@@ -184,7 +184,7 @@ helper('row_data') ?>
         exportOptions: {
           columns: function(idx, data, node) {
             const header = $(node).text().toLowerCase();
-            return !header.includes('photo') && !header.includes('action');
+            return !header.includes('photo') && !header.includes('aksi');
           },
           stripHtml: true
         },
