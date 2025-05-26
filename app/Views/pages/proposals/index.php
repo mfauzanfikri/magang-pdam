@@ -28,7 +28,7 @@ helper('row_data') ?>
       <path d="M12 5l0 14" />
       <path d="M5 12l14 0" />
     </svg>
-    Tambah proposal
+    Ajukan proposal
   </button>
   <button
     class="btn btn-primary btn-6 d-sm-none btn-icon"

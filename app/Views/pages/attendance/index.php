@@ -50,7 +50,7 @@ helper('row_data') ?>
               <th>Tanggal</th>
               <th>Masuk</th>
               <th>Pulang</th>
-                <?php if(Authz::any(['admin', 'supervisor'])): ?>
+                <?php if(Authz::is('admin')): ?>
                   <th>Aksi</th>
                 <?php endif ?>
             </tr>
@@ -62,7 +62,7 @@ helper('row_data') ?>
                 <td><?= $attendance['date'] ?></td>
                 <td><?= $attendance['check_in'] ?></td>
                 <td><?= $attendance['check_out'] ?></td>
-                  <?php if(Authz::any(['admin', 'supervisor'])): ?>
+                  <?php if(Authz::is('admin')): ?>
                     <td>
                       <button class="btn-verification btn btn-warning btn-5 d-none d-sm-inline-block"
                               data-bs-toggle="modal"
@@ -140,7 +140,7 @@ helper('row_data') ?>
 
 <?= $this->section('modals') ?>
 
-<?php if(Authz::any(['admin', 'supervisor'])): ?>
+<?php if(Authz::is('admin')): ?>
     <?= $this->include('pages/attendance/verification-modal') ?>
 <?php endif ?>
 

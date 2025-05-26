@@ -61,7 +61,7 @@ helper('row_data') ?>
 <?= $this->include('components/error-alert') ?>
 <?= $this->include('components/success-alert') ?>
 
-<?php if(Authz::any(['admin', 'supervisor'])): ?>
+<?php if(Authz::is('supervisor')): ?>
   <div id="final-report-tabs" class="card">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
@@ -250,7 +250,7 @@ helper('row_data') ?>
 
 <?= $this->include('pages/final-reports/detail-modal') ?>
 
-<?php if(Authz::any(['admin', 'supervisor'])): ?>
+<?php if(Authz::is('supervisor')): ?>
     <?= $this->include('pages/final-reports/approval-modal') ?>
     <?= $this->include('pages/final-reports/issue-certificate-modal') ?>
 <?php endif ?>
@@ -270,7 +270,7 @@ helper('row_data') ?>
 <?= $this->section('page-js') ?>
 <script src="/assets/js/utils/row-data.js"></script>
 <script>
-    <?php if(Authz::any(['admin', 'supervisor'])): ?>
+    <?php if(Authz::is('supervisor')): ?>
     const approvalModal = $('#modal-final-report-approval');
 
     function init() {
