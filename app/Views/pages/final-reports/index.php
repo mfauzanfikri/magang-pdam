@@ -138,7 +138,7 @@ helper('row_data') ?>
                 <th>Instansi</th>
                 <th>Nama Ketua</th>
                 <th>Kelompok</th>
-                  <?php if(Authz::is('supervisor')): ?>
+                  <?php if(Authz::is('admin')): ?>
                     <th>Aksi</th>
                   <?php endif ?>
               </tr>
@@ -156,7 +156,7 @@ helper('row_data') ?>
                             data-row="<?= encode_row_data($finalReport) ?>">
                       Detail
                     </button>
-                      <?php if(Authz::is('supervisor')): ?>
+                      <?php if(Authz::is('admin')): ?>
                           <?php if(!$finalReport['is_certificate_issued']): ?>
                           <button class="btn-issue-certificate btn btn-primary btn-5 d-none d-sm-inline-block"
                                   data-bs-toggle="modal"
@@ -279,7 +279,7 @@ helper('row_data') ?>
 <?= $this->section('page-js') ?>
 <script src="/assets/js/utils/row-data.js"></script>
 <script>
-    <?php if(Authz::is('supervisor')): ?>
+    <?php if(Authz::any(['supervisor', 'admin'])): ?>
     const approvalModal = $('#modal-final-report-approval');
 
     function init() {
