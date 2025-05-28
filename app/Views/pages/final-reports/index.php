@@ -279,7 +279,7 @@ helper('row_data') ?>
 <?= $this->section('page-js') ?>
 <script src="/assets/js/utils/row-data.js"></script>
 <script>
-    <?php if(Authz::is('supervisor')): ?>
+    <?php if(Authz::any(['supervisor', 'admin'])): ?>
     const approvalModal = $('#modal-final-report-approval');
 
     function init() {
