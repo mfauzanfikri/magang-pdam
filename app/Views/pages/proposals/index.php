@@ -98,7 +98,9 @@ helper('row_data') ?>
                 <th>Institusi</th>
                 <th>Nama</th>
                 <th>Kelompok</th>
-                <th>Aksi</th>
+                  <?php if(Authz::is('supervisor')): ?>
+                    <th>Aksi</th>
+                  <?php endif ?>
               </tr>
               </thead>
               <tbody>
@@ -108,13 +110,16 @@ helper('row_data') ?>
                   <td><?= $proposal['institution'] ?></td>
                   <td><?= $proposal['leader']['name'] ?></td>
                   <td><?= $proposal['is_group'] ? 'Ya' : 'Tidak' ?></td>
-                  <td>
-                    <button class="btn-approval btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-                            data-bs-target="#modal-proposal-approval"
-                            data-row="<?= encode_row_data($proposal) ?>">
-                      Persetujuan
-                    </button>
-                  </td>
+                    <?php if(Authz::is('supervisor')): ?>
+                      <td>
+                        <button class="btn-approval btn btn-warning btn-5 d-none d-sm-inline-block"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal-proposal-approval"
+                                data-row="<?= encode_row_data($proposal) ?>">
+                          Persetujuan
+                        </button>
+                      </td>
+                    <?php endif ?>
                 </tr>
               <?php endforeach; ?>
               </tbody>
@@ -404,12 +409,12 @@ helper('row_data') ?>
     <?php endif ?>
     
     <?php if(Authz::any(['candidate', 'intern', 'graduate'])): ?>
-    $('#modal-add-proposal').on('change', 'input[name="is_group"]', function () {
+    $('#modal-add-proposal').on('change', 'input[name="is_group"]', function() {
       const isChecked = $(this).is(':checked');
       const $wrapper = $('#modal-add-proposal #members-wrapper');
       const $input = $('#modal-add-proposal #add-proposal-members');
 
-      if (isChecked) {
+      if(isChecked) {
         $wrapper.removeClass('d-none');
         $input.prop('required', true);
       } else {
@@ -419,10 +424,10 @@ helper('row_data') ?>
     });
 
     // Optional: trigger once on modal show to initialize state
-    $('#modal-add-proposal').on('shown.bs.modal', function () {
+    $('#modal-add-proposal').on('shown.bs.modal', function() {
       $('input[name="is_group"]', this).trigger('change');
     });
-    
+
     function initUser() {
       $('.btn-detail').off('click').on('click', function() {
         const proposal = decodeRowData($(this).data('row'));
@@ -463,7 +468,7 @@ helper('row_data') ?>
 
       $('.btn-delete').off('click').on('click', function() {
         const id = $(this).data('id');
-        $('#modal-delete-proposal').find('form').attr('action', `/proposals/${id}`)
+        $('#modal-delete-proposal').find('form').attr('action', `/proposals/${id}`);
       });
     }
 

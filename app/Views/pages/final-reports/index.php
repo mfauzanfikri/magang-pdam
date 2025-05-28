@@ -61,7 +61,7 @@ helper('row_data') ?>
 <?= $this->include('components/error-alert') ?>
 <?= $this->include('components/success-alert') ?>
 
-<?php if(Authz::is('supervisor')): ?>
+<?php if(Authz::any(['supervisor', 'admin'])): ?>
   <div id="final-report-tabs" class="card">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
@@ -99,7 +99,9 @@ helper('row_data') ?>
                 <th>Instansi</th>
                 <th>Nama Ketua</th>
                 <th>Kelompok</th>
-                <th>Aksi</th>
+                  <?php if(Authz::is('supervisor')): ?>
+                    <th>Aksi</th>
+                  <?php endif; ?>
               </tr>
               </thead>
               <tbody>
@@ -109,13 +111,16 @@ helper('row_data') ?>
                   <td><?= $finalReport['proposal']['institution'] ?></td>
                   <td><?= $finalReport['proposal']['leader']['name'] ?></td>
                   <td><?= $finalReport['proposal']['is_group'] ? 'Ya' : 'Tidak' ?></td>
-                  <td>
-                    <button class="btn-approval btn btn-warning btn-5 d-none d-sm-inline-block" data-bs-toggle="modal"
-                            data-bs-target="#modal-final-report-approval"
-                            data-row="<?= encode_row_data($finalReport) ?>">
-                      Persetujuan
-                    </button>
-                  </td>
+                    <?php if(Authz::is('supervisor')): ?>
+                      <td>
+                        <button class="btn-approval btn btn-warning btn-5 d-none d-sm-inline-block"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal-final-report-approval"
+                                data-row="<?= encode_row_data($finalReport) ?>">
+                          Persetujuan
+                        </button>
+                      </td>
+                    <?php endif ?>
                 </tr>
               <?php endforeach; ?>
               </tbody>
@@ -133,7 +138,9 @@ helper('row_data') ?>
                 <th>Instansi</th>
                 <th>Nama Ketua</th>
                 <th>Kelompok</th>
-                <th>Aksi</th>
+                  <?php if(Authz::is('supervisor')): ?>
+                    <th>Aksi</th>
+                  <?php endif ?>
               </tr>
               </thead>
               <tbody>
@@ -149,13 +156,15 @@ helper('row_data') ?>
                             data-row="<?= encode_row_data($finalReport) ?>">
                       Detail
                     </button>
-                      <?php if(!$finalReport['is_certificate_issued']): ?>
-                        <button class="btn-issue-certificate btn btn-primary btn-5 d-none d-sm-inline-block"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modal-issue-certificate"
-                                data-row="<?= encode_row_data($finalReport) ?>">
-                          Terbitkan Sertifikat
-                        </button>
+                      <?php if(Authz::is('supervisor')): ?>
+                          <?php if(!$finalReport['is_certificate_issued']): ?>
+                          <button class="btn-issue-certificate btn btn-primary btn-5 d-none d-sm-inline-block"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#modal-issue-certificate"
+                                  data-row="<?= encode_row_data($finalReport) ?>">
+                            Terbitkan Sertifikat
+                          </button>
+                          <?php endif ?>
                       <?php endif ?>
                   </td>
                 </tr>
