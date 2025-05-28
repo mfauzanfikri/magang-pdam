@@ -138,9 +138,7 @@ helper('row_data') ?>
                 <th>Instansi</th>
                 <th>Nama Ketua</th>
                 <th>Kelompok</th>
-                  <?php if(Authz::is('admin')): ?>
-                    <th>Aksi</th>
-                  <?php endif ?>
+                <th>Aksi</th>
               </tr>
               </thead>
               <tbody>
@@ -409,13 +407,13 @@ helper('row_data') ?>
     // pending final reports table
     new DataTable('#pending-final-reports-table', {
       order: [],
-      columnDefs: [
+      columnDefs: <?= Authz::is('supervisor') ? '[
         {
           targets: -1,
           orderable: false,
           searchable: false
         }
-      ],
+      ]' : 'undefined' ?>,
       initComplete: function() {
         init();
       },
