@@ -261,12 +261,12 @@ helper('row_data') ?>
     <?= $this->include('pages/final-reports/approval-modal') ?>
 <?php endif ?>
 
-<?php if(Authz::is('supervisor')): ?>
+<?php if(Authz::is('admin')): ?>
     <?= $this->include('pages/final-reports/issue-certificate-modal') ?>
 <?php endif ?>
 
 <?php if(Authz::any(['candidate', 'intern', 'graduate'])): ?>
-    <?= $this->include('pages/final-reports/add-modal') ?>
+    <?= $this->include('pages/final-reports/add-modal') ?>s
     <?= $this->include('pages/final-reports/delete-modal') ?>
 <?php endif ?>
 
