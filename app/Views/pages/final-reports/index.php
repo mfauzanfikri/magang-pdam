@@ -259,6 +259,9 @@ helper('row_data') ?>
 
 <?php if(Authz::is('supervisor')): ?>
     <?= $this->include('pages/final-reports/approval-modal') ?>
+<?php endif ?>
+
+<?php if(Authz::is('supervisor')): ?>
     <?= $this->include('pages/final-reports/issue-certificate-modal') ?>
 <?php endif ?>
 
