@@ -1,4 +1,5 @@
-<?php use App\Libraries\Authz;
+<?php use App\Libraries\AuthUser;
+use App\Libraries\Authz;
 
 helper('row_data') ?>
 
@@ -6,6 +7,8 @@ helper('row_data') ?>
 
 <?= $this->section('page-style-libs') ?>
 <link rel="stylesheet" href="/assets/libs/datatables/datatables.css">
+
+<meta name="user" content="<?= AuthUser::name() ?>">
 <?= $this->endSection() ?>
 
 <?php if(Authz::is('intern')): ?>
@@ -189,15 +192,38 @@ helper('row_data') ?>
           stripHtml: true
         },
         customize: function(doc) {
+          const name = $('meta[name=user]').attr('content');
+          const datetime = new Date();
+          const formatted = datetime.toLocaleString('id-ID', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          }).replace(/\//g, '-').replace('.', ':');
+
+          // Add custom header at top-left
+          doc.content.splice(0, 0, {
+            text: `Dicetak oleh:\n${name}\n${formatted}`,
+            fontSize: 8,
+            absolutePosition: { x: 40, y: 20 }
+          });
+
+          // Center default title (if any)
           doc.styles.title = {
             alignment: 'center',
             fontSize: 16
           };
 
-          const tableBody = doc.content[1].table.body;
-          const colCount = tableBody[0].length;
-          doc.content[1].table.widths = Array(colCount).fill('*');
-          doc.content[1].margin = [0, 12, 0, 0];
+          // Find and customize the table block safely
+          const tableBlock = doc.content.find(item => item.table);
+          if(tableBlock) {
+            const tableBody = tableBlock.table.body;
+            const colCount = tableBody[0].length;
+            tableBlock.table.widths = Array(colCount).fill('*');
+            tableBlock.margin = [0, 12, 0, 0]; // top margin after header
+          }
         },
         className: 'btn btn-sm btn-outline-danger'
       }
